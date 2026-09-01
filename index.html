@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,9 +38,12 @@ const DEFAULT_PRS=[
 ];
 const LS={runs:"runtracker_runs",prs:"runtracker_prs",goal:"runtracker_goal"};
 const DAY=86400000;
+
 let state={
 runs:load(LS.runs,[]),prs:load(LS.prs,DEFAULT_PRS),goal:load(LS.goal,20),
-page:"home",chartRange:"10w",showAddRun:false,showAddPr:false,
+page:"home",chartRange:"10w",
+calendarMonth:new Date().getMonth(),calendarYear:new Date().getFullYear(),
+showAddRun:false,showAddPr:false,
 editingGoal:false,editingPrId:null,editingRunId:null,error:""
 };
 
@@ -115,14 +117,24 @@ function home(){
  <div class="lane-caption">${state.editingGoal?goalEdit():`<button class="link" onclick="setState({editingGoal:true})">goal: ${state.goal} mi/week ${pencil()}</button>`}</div></section>`
 }
 
+function changeMonth(n){
+ let d=new Date(state.calendarYear,state.calendarMonth+n,1);
+ setState({calendarMonth:d.getMonth(),calendarYear:d.getFullYear()})
+}
+
 function calendar(){
- let n=new Date(),y=n.getFullYear(),m=n.getMonth(),first=new Date(y,m,1),days=new Date(y,m+1,0).getDate(),off=(first.getDay()+6)%7,set=new Set(state.runs.map(r=>r.date)),cells="";
+ let y=state.calendarYear,m=state.calendarMonth,first=new Date(y,m,1),days=new Date(y,m+1,0).getDate(),off=(first.getDay()+6)%7,set=new Set(state.runs.map(r=>r.date)),cells="";
+
  for(let i=0;i<off;i++)cells+=`<div class="calendar-day empty-day"></div>`;
+
  for(let d=1;d<=days;d++){
   let x=`${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`,run=set.has(x);
   cells+=`<div class="calendar-day ${run?"has-run":""} ${x===today()?"today":""}">${d}${run?`<span class="calendar-check">${check(13)}</span>`:""}</div>`
  }
- return `<section class="block"><div class="calendar"><div class="calendar-head"><div class="calendar-title">${n.toLocaleDateString(undefined,{month:"long",year:"numeric"})}</div></div><div class="calendar-weekdays">${"MTWTFSS".split("").map(x=>`<div class="calendar-weekday">${x}</div>`).join("")}</div><div class="calendar-grid">${cells}</div></div></section>`
+
+ let title=new Date(y,m,1).toLocaleDateString(undefined,{month:"long",year:"numeric"});
+
+ return `<section class="block"><div class="calendar"><div class="calendar-head"><button class="btn-icon" onclick="changeMonth(-1)">‹</button><div class="calendar-title">${title}</div><button class="btn-icon" onclick="changeMonth(1)">›</button></div><div class="calendar-weekdays">${"MTWTFSS".split("").map(x=>`<div class="calendar-weekday">${x}</div>`).join("")}</div><div class="calendar-grid">${cells}</div></div></section>`
 }
 
 function history(){
@@ -196,7 +208,6 @@ function nav(){
  ].map(x=>`<button class="nav-btn ${state.page===x[0]?"active":""}" data-page="${x[0]}">${x[2]}<span>${x[1]}</span></button>`).join("")}</div></nav>`
 }
 
-/* Navigation uses one listener instead of separate inline handlers. */
 document.addEventListener("click",e=>{let b=e.target.closest(".nav-btn");if(b)setState({page:b.dataset.page})});
 
 function svg(path,size=14){return`<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${path}</svg>`}
@@ -216,4 +227,3 @@ render();
 </script>
 </body>
 </html>
-```
