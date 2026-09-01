@@ -8,15 +8,26 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
 <style>
-:root{--bg:#11130f;--card:#191c16;--line:#30342b;--text:#f2f3ed;--muted:#92988b;--accent:#c7f36b;--danger:#ff7777}
+:root{
+--bg:#11130f;
+--card:#191c16;
+--line:#30342b;
+--text:#f2f3ed;
+--muted:#92988b;
+--accent:#c7f36b;
+--danger:#ff7777
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:"IBM Plex Sans",sans-serif}
+html,body{margin:0;background:var(--bg);color:var(--text)}
+body{font-family:"IBM Plex Sans",sans-serif}
 button,input{font:inherit}
 button{cursor:pointer}
 .app{width:min(100%,480px);min-height:100vh;margin:auto;padding:20px 16px 90px}
 h1,h2,h3{font-family:"Space Grotesk",sans-serif;margin:0}
-h1{font-size:28px}h2{font-size:20px;margin-bottom:14px}
+h1{font-size:28px}
+h2{font-size:20px;margin-bottom:14px}
 .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
 .sub{color:var(--muted);font-size:13px}
 .hero,.card{background:var(--card);border:1px solid var(--line);border-radius:16px}
@@ -27,7 +38,6 @@ h1{font-size:28px}h2{font-size:20px;margin-bottom:14px}
 .progress{height:7px;background:#292d24;border-radius:9px;overflow:hidden;margin:14px 0 8px}
 .progress i{display:block;height:100%;background:var(--accent);width:0}
 .row{display:flex;justify-content:space-between;align-items:center}
-.card{padding:16px;margin-bottom:12px}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .stat strong{display:block;font:600 25px "Space Grotesk";margin-top:3px}
 .label{font-size:12px;color:var(--muted)}
@@ -42,105 +52,1614 @@ h1{font-size:28px}h2{font-size:20px;margin-bottom:14px}
 .bar{width:100%;max-width:28px;background:var(--accent);border-radius:5px 5px 2px 2px;min-height:2px}
 .bar-label{font-size:9px;color:var(--muted)}
 .run-list{display:flex;flex-direction:column;gap:8px}
-.run{display:grid;grid-template-columns:42px minmax(0,1fr) auto auto 28px 28px;gap:8px;align-items:center;padding:12px;background:var(--card);border:1px solid var(--line);border-radius:12px}
+.run{
+display:grid;
+grid-template-columns:42px minmax(0,1fr) auto auto 28px 28px;
+gap:8px;
+align-items:center;
+padding:12px;
+background:var(--card);
+border:1px solid var(--line);
+border-radius:12px
+}
 .run-date{font-size:12px;color:var(--muted)}
-.run-main{min-width:0}.run-distance{font-weight:600}.run-note{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.run-main{min-width:0}
+.run-distance{font-weight:600}
+.run-note{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .run-meta{font-size:11px;color:var(--muted);white-space:nowrap}
-.icon{border:0;background:none;color:var(--muted);padding:4px;font-size:16px}.icon:hover{color:var(--text)}
+.icon{border:0;background:none;color:var(--muted);padding:4px;font-size:16px}
+.icon:hover{color:var(--text)}
 .pr{display:flex;justify-content:space-between;align-items:center}
-.pr-info strong{display:block;font:600 18px "Space Grotesk"}.pr-info span{color:var(--muted);font-size:12px}
+.pr-info strong{display:block;font:600 18px "Space Grotesk"}
+.pr-info span{color:var(--muted);font-size:12px}
 .actions{display:flex;gap:8px}
 .btn{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:10px;padding:9px 13px}
 .btn.primary{background:var(--accent);color:var(--bg);border-color:var(--accent);font-weight:600}
 .empty{text-align:center;color:var(--muted);padding:25px}
-.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,480px);height:68px;background:#171a14ee;backdrop-filter:blur(12px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);z-index:5}
-.nav button{border:0;background:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10px}.nav button.active{color:var(--accent)}.nav svg{width:21px;height:21px}
-.tab{display:none}.tab.active{display:block}
-.modal{position:fixed;inset:0;background:#000b;display:none;align-items:end;justify-content:center;z-index:10}.modal.show{display:flex}
+.nav{
+position:fixed;
+bottom:0;
+left:50%;
+transform:translateX(-50%);
+width:min(100%,480px);
+height:68px;
+background:#171a14ee;
+backdrop-filter:blur(12px);
+border-top:1px solid var(--line);
+display:grid;
+grid-template-columns:repeat(3,1fr);
+z-index:5
+}
+.nav button{border:0;background:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10px}
+.nav button.active{color:var(--accent)}
+.nav svg{width:21px;height:21px}
+.tab{display:none}
+.tab.active{display:block}
+.modal{position:fixed;inset:0;background:#000b;display:none;align-items:end;justify-content:center;z-index:10}
+.modal.show{display:flex}
 .sheet{width:min(100%,480px);background:var(--card);border:1px solid var(--line);border-bottom:0;border-radius:18px 18px 0 0;padding:20px 16px 25px}
-.form{display:grid;gap:12px}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}.field input{width:100%;background:#11130f;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:11px}.modal-actions{display:flex;gap:8px;margin-top:6px}.modal-actions>*{flex:1}
-.toast{position:fixed;left:50%;bottom:82px;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:9px 13px;border-radius:9px;font-size:12px;display:none;z-index:20}
-@media(max-width:390px){.run{grid-template-columns:38px minmax(0,1fr) auto 28px 28px}.run-meta.pace{display:none}}
+.form{display:grid;gap:12px}
+.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
+.field input{width:100%;background:#11130f;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:11px}
+.modal-actions{display:flex;gap:8px;margin-top:6px}
+.modal-actions>*{flex:1}
+.import-status{font-size:12px;color:var(--muted);margin-top:10px}
+@media(max-width:390px){
+.run{grid-template-columns:38px minmax(0,1fr) auto 28px 28px}
+.run-meta.pace{display:none}
+}
 </style>
+
 </head>
+
 <body>
+
 <div class="app">
-<header class="header"><div><h1>Run Log</h1><div class="sub" id="today"></div></div><button class="btn primary" onclick="openRun()">+ Run</button></header>
+
+<header class="header">
+<div>
+<h1>Run Log</h1>
+<div class="sub" id="today"></div>
+</div>
+<button class="btn primary" onclick="openRun()">+ Run</button>
+</header>
 
 <section id="home" class="tab active">
-<div class="hero"><div class="hero-label">Weekly mileage</div><div class="hero-value"><span id="weekMiles">0.0</span> <span>/ <b id="goalText">20</b> mi</span></div><div class="progress"><i id="progress"></i></div><div class="row sub"><span>Goal progress</span><span id="goalPct">0%</span></div></div>
-<div class="stats"><div class="card"><div class="label">STREAK</div><div class="stat"><strong id="streak">0</strong><span class="label">days</span></div></div><div class="card"><div class="label">TOTAL RUNS</div><div class="stat"><strong id="totalRuns">0</strong><span class="label">runs</span></div></div></div>
-<div class="section"><h2>Calendar</h2><div class="card"><div class="row" style="margin-bottom:12px"><button class="icon" onclick="changeMonth(-1)">‹</button><strong id="month"></strong><button class="icon" onclick="changeMonth(1)">›</button></div><div class="calendar" id="calendar"></div></div></div>
+
+<div class="hero">
+<div class="hero-label">Weekly mileage</div>
+<div class="hero-value">
+<span id="weekMiles">0.0</span>
+<span>/ <b id="goalText">20</b> mi</span>
+</div>
+<div class="progress"><i id="progress"></i></div>
+<div class="row sub">
+<span>Goal progress</span>
+<span id="goalPct">0%</span>
+</div>
+</div>
+
+<div class="stats">
+
+<div class="card">
+<div class="label">STREAK</div>
+<div class="stat">
+<strong id="streak">0</strong>
+<span class="label">days</span>
+</div>
+</div>
+
+<div class="card">
+<div class="label">TOTAL RUNS</div>
+<div class="stat">
+<strong id="totalRuns">0</strong>
+<span class="label">runs</span>
+</div>
+</div>
+
+</div>
+
+<div class="section">
+<h2>Calendar</h2>
+
+<div class="card">
+
+<div class="row" style="margin-bottom:12px">
+<button class="icon" onclick="changeMonth(-1)">‹</button>
+<strong id="month"></strong>
+<button class="icon" onclick="changeMonth(1)">›</button>
+</div>
+
+<div class="calendar" id="calendar"></div>
+
+</div>
+</div>
+
 </section>
 
 <section id="history" class="tab">
-<div class="section"><div class="row"><h2>Mileage</h2><span class="sub">Last 10 weeks</span></div><div class="card"><div class="chart" id="chart"></div></div></div>
-<div class="section"><div class="row"><h2>Runs</h2><button class="btn" onclick="exportData()">Export</button></div><div class="run-list" id="runs"></div></div>
-<div class="section"><div class="card"><div class="row"><span class="label">IMPORT DATA</span><button class="btn" onclick="document.getElementById('file').click()">Import JSON</button></div><input id="file" type="file" accept=".json,application/json" hidden onchange="importData(this)"></div></div>
+
+<div class="section">
+
+<div class="row">
+<h2>Mileage</h2>
+<span class="sub">Last 10 weeks</span>
+</div>
+
+<div class="card">
+<div class="chart" id="chart"></div>
+</div>
+
+</div>
+
+<div class="section">
+
+<div class="row">
+<h2>Runs</h2>
+<button class="btn" onclick="exportData()">Export</button>
+</div>
+
+<div class="run-list" id="runs"></div>
+
+</div>
+
+<div class="section">
+
+<div class="card">
+
+<div class="row">
+<span class="label">IMPORT DATA</span>
+<button class="btn" onclick="document.getElementById('file').click()">Import JSON</button>
+</div>
+
+<input
+id="file"
+type="file"
+accept=".json,application/json"
+hidden
+onchange="importData(this)"
+
+>
+
+<div id="importStatus" class="import-status"></div>
+
+</div>
+
+</div>
+
 </section>
 
 <section id="prs" class="tab">
-<div class="section"><div class="row"><h2>Personal Bests</h2><button class="btn primary" onclick="openPR()">+ PR</button></div><div id="prList"></div></div>
+
+<div class="section">
+
+<div class="row">
+<h2>Personal Bests</h2>
+<button class="btn primary" onclick="openPR()">+ PR</button>
+</div>
+
+<div id="prList"></div>
+
+</div>
+
 </section>
+
 </div>
 
 <nav class="nav">
-<button class="active" onclick="tab('home',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10M9 20v-6h6v6"/></svg>Home</button>
-<button onclick="tab('history',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h17"/><path d="M7 16l4-5 3 2 5-7"/></svg>History</button>
-<button onclick="tab('prs',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3 2.8 5.7L21 9.6l-4.5 4.4 1.1 6.2-5.6-2.9-5.6 2.9 1.1-6.2L3 9.6l6.2-.9L12 3z"/></svg>PRs</button>
+
+<button class="active" onclick="tab('home',this)">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M3 11.5 12 4l9 7.5"/>
+<path d="M5 10v10h14V10M9 20v-6h6v6"/>
+</svg>
+Home
+</button>
+
+<button onclick="tab('history',this)">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M4 19V5M4 19h17"/>
+<path d="M7 16l4-5 3 2 5-7"/>
+</svg>
+History
+</button>
+
+<button onclick="tab('prs',this)">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="m12 3 2.8 5.7L21 9.6l-4.5 4.4 1.1 6.2-5.6-2.9-5.6 2.9 1.1-6.2L3 9.6l6.2-.9L12 3z"/>
+</svg>
+PRs
+</button>
+
 </nav>
 
-<div class="modal" id="runModal"><div class="sheet"><div class="row" style="margin-bottom:18px"><h2 id="runTitle">Add Run</h2><button class="icon" onclick="closeModal('runModal')">×</button></div><div class="form">
-<div class="field"><label>DATE</label><input id="rDate" type="date"></div>
-<div class="field"><label>DISTANCE (MILES)</label><input id="rDist" type="number" step="0.01" min="0"></div>
-<div class="field"><label>TIME (HH:MM:SS)</label><input id="rTime" placeholder="00:30:00"></div>
-<div class="field"><label>NOTE</label><input id="rNote" maxlength="100"></div>
-<div class="modal-actions"><button class="btn" onclick="closeModal('runModal')">Cancel</button><button class="btn primary" onclick="saveRun()">Save</button></div>
-</div></div></div>
+<div class="modal" id="runModal">
 
-<div class="modal" id="prModal"><div class="sheet"><div class="row" style="margin-bottom:18px"><h2 id="prTitle">Add PR</h2><button class="icon" onclick="closeModal('prModal')">×</button></div><div class="form">
-<div class="field"><label>DISTANCE</label><input id="pDist" placeholder="5K"></div>
-<div class="field"><label>TIME (HH:MM:SS)</label><input id="pTime" placeholder="00:25:00"></div>
-<div class="modal-actions"><button class="btn" onclick="closeModal('prModal')">Cancel</button><button class="btn primary" onclick="savePR()">Save</button></div>
-</div></div></div>
-<div class="toast" id="toast"></div>
+<div class="sheet">
+
+<div class="row" style="margin-bottom:18px">
+<h2 id="runTitle">Add Run</h2>
+<button class="icon" onclick="closeModal('runModal')">×</button>
+</div>
+
+<div class="form">
+
+<div class="field">
+<label>DATE</label>
+<input id="rDate" type="date">
+</div>
+
+<div class="field">
+<label>DISTANCE (MILES)</label>
+<input id="rDist" type="number" step="0.01" min="0">
+</div>
+
+<div class="field">
+<label>TIME (HH:MM:SS)</label>
+<input id="rTime" placeholder="00:30:00">
+</div>
+
+<div class="field">
+<label>NOTE</label>
+<input id="rNote" maxlength="100">
+</div>
+
+<div class="modal-actions">
+<button class="btn" onclick="closeModal('runModal')">Cancel</button>
+<button class="btn primary" onclick="saveRun()">Save</button>
+</div>
+
+</div>
+</div>
+</div>
+
+<div class="modal" id="prModal">
+
+<div class="sheet">
+
+<div class="row" style="margin-bottom:18px">
+<h2 id="prTitle">Add PR</h2>
+<button class="icon" onclick="closeModal('prModal')">×</button>
+</div>
+
+<div class="form">
+
+<div class="field">
+<label>DISTANCE</label>
+<input id="pDist" placeholder="5K">
+</div>
+
+<div class="field">
+<label>TIME (HH:MM:SS)</label>
+<input id="pTime" placeholder="00:25:00">
+</div>
+
+<div class="modal-actions">
+<button class="btn" onclick="closeModal('prModal')">Cancel</button>
+<button class="btn primary" onclick="savePR()">Save</button>
+</div>
+
+</div>
+</div>
+</div>
 
 <script>
-const KEY="runLogData";
-let data=JSON.parse(localStorage.getItem(KEY)||'{"runs":[],"prs":[],"goal":20}');
-let editRun=null,editPR=null,monthDate=new Date();
 
-function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
-function id(){return Date.now()+Math.random().toString(16).slice(2)}
-function pad(n){return String(n).padStart(2,"0")}
-function parseTime(v){if(typeof v==="number")return v;let a=String(v||"").split(":").map(Number);if(a.some(isNaN))return 0;if(a.length===3)return a[0]*3600+a[1]*60+a[2];if(a.length===2)return a[0]*60+a[1];return 0}
-function time(s){s=Math.max(0,Math.round(s||0));return pad(Math.floor(s/3600))+":"+pad(Math.floor(s%3600/60))+":"+pad(s%60)}
-function pace(r){return r.distance&&r.timeSec?time(r.timeSec/r.distance):"--:--"}
-function date(d){return new Date(d+"T12:00:00").toLocaleDateString(undefined,{month:"short",day:"numeric"})}
-function localDate(){let d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
-function toast(t){let e=document.getElementById("toast");e.textContent=t;e.style.display="block";setTimeout(()=>e.style.display="none",1800)}
-function tab(name,btn){document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.getElementById(name).classList.add("active");document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));btn.classList.add("active")}
-function openRun(r=null){editRun=r?.id||null;document.getElementById("runTitle").textContent=r?"Edit Run":"Add Run";rDate.value=r?.date||localDate();rDist.value=r?.distance||"";rTime.value=r?time(r.timeSec):"";rNote.value=r?.note||"";document.getElementById("runModal").classList.add("show")}
-function saveRun(){let distance=parseFloat(rDist.value),ts=parseTime(rTime.value);if(!rDate.value||!distance)return toast("Enter date and distance");let r={id:editRun||id(),date:rDate.value,distance,timeSec:ts,note:rNote.value.trim()};if(editRun)data.runs=data.runs.map(x=>x.id===editRun?r:x);else data.runs.push(r);data.runs.sort((a,b)=>b.date.localeCompare(a.date));closeModal("runModal");save();toast(editRun?"Run updated":"Run added")}
-function delRun(id){if(!confirm("Delete this run?"))return;data.runs=data.runs.filter(r=>r.id!==id);save()}
-function openPR(p=null){editPR=p?.id||null;document.getElementById("prTitle").textContent=p?"Edit PR":"Add PR";pDist.value=p?.distance||"";pTime.value=p?time(p.timeSec):"";document.getElementById("prModal").classList.add("show")}
-function savePR(){if(!pDist.value||!pTime.value)return toast("Enter distance and time");let p={id:editPR||id(),distance:pDist.value.trim(),timeSec:parseTime(pTime.value)};if(editPR)data.prs=data.prs.map(x=>x.id===editPR?p:x);else data.prs.push(p);closeModal("prModal");save();toast(editPR?"PR updated":"PR added")}
-function delPR(id){if(!confirm("Delete this PR?"))return;data.prs=data.prs.filter(p=>p.id!==id);save()}
-function closeModal(id){document.getElementById(id).classList.remove("show")}
-function renderHome(){let now=new Date(),start=new Date(now);start.setDate(now.getDate()-now.getDay()+1);let miles=data.runs.filter(r=>new Date(r.date+"T12:00:00")>=start).reduce((s,r)=>s+r.distance,0),pct=Math.min(100,miles/data.goal*100);weekMiles.textContent=miles.toFixed(1);goalText.textContent=data.goal;goalPct.textContent=Math.round(pct)+"%";progress.style.width=pct+"%";totalRuns.textContent=data.runs.length;streak.textContent=getStreak();renderCalendar()}
-function getStreak(){let days=new Set(data.runs.map(r=>r.date)),n=0,d=new Date();while(days.has(localDateFrom(d))){n++;d.setDate(d.getDate()-1)}return n}
-function localDateFrom(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
-function renderCalendar(){let y=monthDate.getFullYear(),m=monthDate.getMonth(),first=new Date(y,m,1),last=new Date(y,m+1,0),runs=new Set(data.runs.map(r=>r.date));month.textContent=first.toLocaleDateString(undefined,{month:"long",year:"numeric"});calendar.innerHTML=["M","T","W","T","F","S","S"].map(x=>`<div class="cal-head">${x}</div>`).join("");let offset=(first.getDay()+6)%7;for(let i=0;i<offset;i++)calendar.innerHTML+=`<div></div>`;for(let d=1;d<=last.getDate();d++){let ds=y+"-"+pad(m+1)+"-"+pad(d);calendar.innerHTML+=`<div class="day ${runs.has(ds)?"run":""} ${ds===localDate()?"today":""}">${runs.has(ds)?"✓":d}</div>`}}
-function changeMonth(n){monthDate.setMonth(monthDate.getMonth()+n);renderCalendar()}
-function renderHistory(){let weeks=[];let now=new Date();for(let i=9;i>=0;i--){let end=new Date(now);end.setDate(now.getDate()-now.getDay()-7*i+6);let start=new Date(end);start.setDate(end.getDate()-6);let miles=data.runs.filter(r=>{let d=new Date(r.date+"T12:00:00");return d>=start&&d<=end}).reduce((s,r)=>s+r.distance,0);weeks.push({miles,start})}let max=Math.max(1,...weeks.map(x=>x.miles));chart.innerHTML=weeks.map(x=>`<div class="bar-wrap"><div class="bar" style="height:${x.miles/max*100}%"></div><div class="bar-label">${x.miles.toFixed(0)}</div></div>`).join("");runs.innerHTML=data.runs.length?data.runs.map(r=>`<div class="run"><div class="run-date">${date(r.date)}</div><div class="run-main"><div class="run-distance">${r.distance} mi</div>${r.note?`<div class="run-note">${escapeHTML(r.note)}</div>`:""}</div><div class="run-meta">${time(r.timeSec)}</div><div class="run-meta pace">${pace(r)}/mi</div><button class="icon" onclick='openRun(${JSON.stringify(r)})'>✎</button><button class="icon" onclick="delRun('${r.id}')">×</button></div>`).join(""):`<div class="empty">No runs logged yet.</div>`}
-function renderPRs(){prList.innerHTML=data.prs.length?data.prs.map(p=>`<div class="card pr"><div class="pr-info"><strong>${escapeHTML(p.distance)}</strong><span>${time(p.timeSec)}</span></div><div class="actions"><button class="icon" onclick='openPR(${JSON.stringify(p)})'>✎</button><button class="icon" onclick="delPR('${p.id}')">×</button></div></div>`).join(""):`<div class="card empty">No personal bests yet.</div>`}
-function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
-function normalizeRun(r){return{id:r.id||id(),date:r.date||r.runDate||localDate(),distance:Number(r.distance??r.miles??0),timeSec:parseTime(r.timeSec??r.timeSeconds??r.seconds??r.time),note:r.note||r.notes||""}}
-function normalizePR(p){return{id:p.id||id(),distance:String(p.distance??p.name??p.label??""),timeSec:parseTime(p.timeSec??p.timeSeconds??p.seconds??p.time)}}
-function importData(input){let f=input.files[0];if(!f)return;let reader=new FileReader();reader.onload=()=>{try{let x=JSON.parse(reader.result),runs=x.runs,prs=x.prs||x.personalBests||x.personal_records;if(Array.isArray(x)){runs=x.filter(v=>v.date||v.runDate);prs=x.filter(v=>v.distance&&(v.time||v.timeSec||v.timeSeconds||v.seconds)&&!v.date)}if(!Array.isArray(runs)&&!Array.isArray(prs))throw 0;if(Array.isArray(runs))data.runs=runs.map(normalizeRun).filter(r=>r.distance>0);if(Array.isArray(prs))data.prs=prs.map(normalizePR).filter(p=>p.distance&&p.timeSec>0);if(x.goal||x.weeklyGoal)data.goal=Number(x.goal||x.weeklyGoal);save();toast("Data imported")}catch(e){toast("Invalid JSON")}input.value=""}}
-function exportData(){let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="run-log.json";a.click();URL.revokeObjectURL(a.href)}
-function render(){today.textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric",year:"numeric"});renderHome();renderHistory();renderPRs()}
+const KEY="runLogData";
+
+const defaultData={
+runs:[],
+prs:[],
+goal:20
+};
+
+let data;
+
+try{
+data=JSON.parse(localStorage.getItem(KEY)||"null");
+}catch{
+data=null;
+}
+
+if(!data || typeof data!=="object"){
+data=defaultData;
+}
+
+if(!Array.isArray(data.runs))data.runs=[];
+if(!Array.isArray(data.prs))data.prs=[];
+if(typeof data.goal!=="number")data.goal=20;
+
+let editRun=null;
+let editPR=null;
+let monthDate=new Date();
+
+
+function save(){
+localStorage.setItem(KEY,JSON.stringify(data));
 render();
+}
+
+
+function id(){
+return Date.now()+"-"+Math.random().toString(16).slice(2);
+}
+
+
+function pad(n){
+return String(n).padStart(2,"0");
+}
+
+
+function localDate(){
+const d=new Date();
+
+return d.getFullYear()+"-"+
+pad(d.getMonth()+1)+"-"+
+pad(d.getDate());
+}
+
+
+function localDateFrom(d){
+return d.getFullYear()+"-"+
+pad(d.getMonth()+1)+"-"+
+pad(d.getDate());
+}
+
+
+function parseTime(value){
+
+if(typeof value==="number"){
+return value;
+}
+
+if(value===null || value===undefined){
+return 0;
+}
+
+let text=String(value).trim();
+
+if(!text){
+return 0;
+}
+
+if(/^\d+(\.\d+)?$/.test(text)){
+return Number(text);
+}
+
+const parts=text.split(":").map(Number);
+
+if(parts.some(Number.isNaN)){
+return 0;
+}
+
+if(parts.length===3){
+return parts[0]*3600+
+parts[1]*60+
+parts[2];
+}
+
+if(parts.length===2){
+return parts[0]*60+
+parts[1];
+}
+
+return 0;
+}
+
+
+function time(seconds){
+
+seconds=Math.max(
+0,
+Math.round(Number(seconds)||0)
+);
+
+const hours=Math.floor(seconds/3600);
+const minutes=Math.floor((seconds%3600)/60);
+const secs=seconds%60;
+
+return pad(hours)+":"+
+pad(minutes)+":"+
+pad(secs);
+}
+
+
+function pace(run){
+
+if(!run.distance || !run.timeSec){
+return "--:--";
+}
+
+const seconds=Math.round(
+run.timeSec/run.distance
+);
+
+const minutes=Math.floor(seconds/60);
+const secs=seconds%60;
+
+return pad(minutes)+":"+pad(secs);
+}
+
+
+function displayDate(dateString){
+
+return new Date(
+dateString+"T12:00:00"
+).toLocaleDateString(
+undefined,
+{
+month:"short",
+day:"numeric"
+}
+);
+}
+
+
+function escapeHTML(value){
+
+return String(value).replace(
+/[&<>"']/g,
+char=>({
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#039;"
+}[char])
+);
+}
+
+
+function tab(name,button){
+
+document
+.querySelectorAll(".tab")
+.forEach(section=>{
+section.classList.remove("active");
+});
+
+document
+.getElementById(name)
+.classList.add("active");
+
+document
+.querySelectorAll(".nav button")
+.forEach(button=>{
+button.classList.remove("active");
+});
+
+button.classList.add("active");
+}
+
+
+/* RUNS */
+
+function openRun(run=null){
+
+editRun=run?run.id:null;
+
+document.getElementById("runTitle").textContent=
+run?"Edit Run":"Add Run";
+
+document.getElementById("rDate").value=
+run?run.date:localDate();
+
+document.getElementById("rDist").value=
+run?run.distance:"";
+
+document.getElementById("rTime").value=
+run?time(run.timeSec):"";
+
+document.getElementById("rNote").value=
+run?(run.note||""):"";
+
+document
+.getElementById("runModal")
+.classList.add("show");
+}
+
+
+function saveRun(){
+
+const dateValue=
+document.getElementById("rDate").value;
+
+const distance=
+parseFloat(
+document.getElementById("rDist").value
+);
+
+const timeValue=
+document.getElementById("rTime").value;
+
+const note=
+document.getElementById("rNote").value.trim();
+
+if(!dateValue || !distance){
+alert("Please enter a date and distance.");
+return;
+}
+
+const run={
+id:editRun||id(),
+date:dateValue,
+distance:distance,
+timeSec:parseTime(timeValue),
+note:note
+};
+
+if(editRun){
+
+data.runs=data.runs.map(existing=>
+existing.id===editRun?run:existing
+);
+
+}else{
+
+data.runs.push(run);
+
+}
+
+data.runs.sort(
+(a,b)=>b.date.localeCompare(a.date)
+);
+
+closeModal("runModal");
+save();
+}
+
+
+function deleteRun(runId){
+
+if(!confirm("Delete this run?")){
+return;
+}
+
+data.runs=data.runs.filter(
+run=>run.id!==runId
+);
+
+save();
+}
+
+
+/* PRs */
+
+function openPR(pr=null){
+
+editPR=pr?pr.id:null;
+
+document.getElementById("prTitle").textContent=
+pr?"Edit PR":"Add PR";
+
+document.getElementById("pDist").value=
+pr?pr.distance:"";
+
+document.getElementById("pTime").value=
+pr?time(pr.timeSec):"";
+
+document
+.getElementById("prModal")
+.classList.add("show");
+}
+
+
+function savePR(){
+
+const distance=
+document.getElementById("pDist").value.trim();
+
+const timeValue=
+document.getElementById("pTime").value;
+
+if(!distance || !timeValue){
+alert("Please enter distance and time.");
+return;
+}
+
+const pr={
+id:editPR||id(),
+distance:distance,
+timeSec:parseTime(timeValue)
+};
+
+if(editPR){
+
+data.prs=data.prs.map(existing=>
+existing.id===editPR?pr:existing
+);
+
+}else{
+
+data.prs.push(pr);
+
+}
+
+closeModal("prModal");
+save();
+}
+
+
+function deletePR(prId){
+
+if(!confirm("Delete this personal best?")){
+return;
+}
+
+data.prs=data.prs.filter(
+pr=>pr.id!==prId
+);
+
+save();
+}
+
+
+/* HOME */
+
+function renderHome(){
+
+const now=new Date();
+
+const startOfWeek=new Date(now);
+
+const day=(now.getDay()+6)%7;
+
+startOfWeek.setDate(
+now.getDate()-day
+);
+
+startOfWeek.setHours(0,0,0,0);
+
+const weeklyMiles=data.runs
+.filter(run=>{
+const d=new Date(
+run.date+"T12:00:00"
+);
+
+return d>=startOfWeek;
+})
+.reduce(
+(total,run)=>total+Number(run.distance||0),
+0
+);
+
+const goal=Number(data.goal)||20;
+
+const percentage=
+Math.min(
+100,
+weeklyMiles/goal*100
+);
+
+document.getElementById("weekMiles")
+.textContent=weeklyMiles.toFixed(1);
+
+document.getElementById("goalText")
+.textContent=goal;
+
+document.getElementById("goalPct")
+.textContent=Math.round(percentage)+"%";
+
+document.getElementById("progress")
+.style.width=percentage+"%";
+
+document.getElementById("totalRuns")
+.textContent=data.runs.length;
+
+document.getElementById("streak")
+.textContent=getStreak();
+
+renderCalendar();
+}
+
+
+function getStreak(){
+
+const runDays=new Set(
+data.runs.map(run=>run.date)
+);
+
+let streak=0;
+const current=new Date();
+
+if(!runDays.has(localDateFrom(current))){
+current.setDate(
+current.getDate()-1
+);
+}
+
+while(
+runDays.has(localDateFrom(current))
+){
+
+streak++;
+
+current.setDate(
+current.getDate()-1
+);
+}
+
+return streak;
+}
+
+
+/* CALENDAR */
+
+function renderCalendar(){
+
+const year=monthDate.getFullYear();
+const month=monthDate.getMonth();
+
+const first=new Date(year,month,1);
+const last=new Date(year,month+1,0);
+
+document.getElementById("month")
+.textContent=
+first.toLocaleDateString(
+undefined,
+{
+month:"long",
+year:"numeric"
+}
+);
+
+const runDates=new Set(
+data.runs.map(run=>run.date)
+);
+
+let html=
+["M","T","W","T","F","S","S"]
+.map(day=>`<div class="cal-head">${day}</div>`)
+.join("");
+
+const offset=(first.getDay()+6)%7;
+
+for(let i=0;i<offset;i++){
+html+="<div></div>";
+}
+
+for(let day=1;day<=last.getDate();day++){
+
+const dateString=
+year+"-"+pad(month+1)+"-"+pad(day);
+
+const hasRun=runDates.has(dateString);
+const today=dateString===localDate();
+
+html+=`
+<div class="day ${hasRun?"run":""} ${today?"today":""}">
+${hasRun?"✓":day}
+</div>
+`;
+}
+
+document.getElementById("calendar")
+.innerHTML=html;
+}
+
+
+function changeMonth(amount){
+
+monthDate.setMonth(
+monthDate.getMonth()+amount
+);
+
+renderCalendar();
+}
+
+
+/* HISTORY */
+
+function renderHistory(){
+
+const weeks=[];
+const now=new Date();
+
+const monday=new Date(now);
+
+const day=(monday.getDay()+6)%7;
+
+monday.setDate(
+monday.getDate()-day
+);
+
+monday.setHours(0,0,0,0);
+
+for(let i=9;i>=0;i--){
+
+const start=new Date(monday);
+
+start.setDate(
+start.getDate()-i*7
+);
+
+const end=new Date(start);
+
+end.setDate(
+end.getDate()+7
+);
+
+const miles=data.runs
+.filter(run=>{
+
+const d=new Date(
+run.date+"T12:00:00"
+);
+
+return d>=start&&d<end;
+})
+.reduce(
+(total,run)=>total+Number(run.distance||0),
+0
+);
+
+weeks.push({
+miles:miles,
+start:start
+});
+}
+
+const max=Math.max(
+1,
+...weeks.map(w=>w.miles)
+);
+
+document.getElementById("chart")
+.innerHTML=
+weeks.map(week=>{
+
+const height=
+week.miles===0
+?2
+:Math.max(
+4,
+week.miles/max*100
+);
+
+return`
+<div class="bar-wrap">
+<div class="bar" style="height:${height}%"></div>
+<div class="bar-label">${week.miles.toFixed(0)}</div>
+</div>
+`;
+
+}).join("");
+
+
+const container=
+document.getElementById("runs");
+
+if(!data.runs.length){
+
+container.innerHTML=
+`<div class="empty">No runs logged yet.</div>`;
+
+return;
+}
+
+container.innerHTML=
+data.runs
+.slice()
+.sort(
+(a,b)=>b.date.localeCompare(a.date)
+)
+.map(run=>`
+
+<div class="run">
+
+<div class="run-date">
+${displayDate(run.date)}
+</div>
+
+<div class="run-main">
+
+<div class="run-distance">
+${run.distance} mi
+</div>
+
+${
+run.note
+?`<div class="run-note">
+${escapeHTML(run.note)}
+</div>`
+:""
+}
+
+</div>
+
+<div class="run-meta">
+${time(run.timeSec)}
+</div>
+
+<div class="run-meta pace">
+${pace(run)}/mi
+</div>
+
+<button
+class="icon"
+title="Edit run"
+onclick='openRun(${JSON.stringify(run)})'>
+✎
+</button>
+
+<button
+class="icon"
+title="Delete run"
+onclick="deleteRun('${run.id}')">
+×
+</button>
+
+</div>
+
+`)
+.join("");
+}
+
+
+/* PRs */
+
+function renderPRs(){
+
+const container=
+document.getElementById("prList");
+
+if(!data.prs.length){
+
+container.innerHTML=
+`<div class="card empty">
+No personal bests yet.
+</div>`;
+
+return;
+}
+
+container.innerHTML=
+data.prs
+.map(pr=>`
+
+<div class="card pr">
+
+<div class="pr-info">
+
+<strong>
+${escapeHTML(pr.distance)}
+</strong>
+
+<span>
+${time(pr.timeSec)}
+</span>
+
+</div>
+
+<div class="actions">
+
+<button
+class="icon"
+title="Edit PR"
+onclick='openPR(${JSON.stringify(pr)})'>
+✎
+</button>
+
+<button
+class="icon"
+title="Delete PR"
+onclick="deletePR('${pr.id}')">
+×
+</button>
+
+</div>
+
+</div>
+
+`)
+.join("");
+}
+
+
+/* FIXED JSON IMPORT */
+
+function importData(input){
+
+const file=input.files[0];
+
+if(!file){
+return;
+}
+
+const reader=new FileReader();
+
+reader.onload=function(){
+
+try{
+
+const json=JSON.parse(reader.result);
+
+let importedRuns=[];
+let importedPRs=[];
+
+
+/* Find a value using multiple possible names */
+
+function first(obj,keys,fallback=null){
+
+if(!obj||typeof obj!=="object"){
+return fallback;
+}
+
+for(const key of keys){
+
+if(
+obj[key]!==undefined &&
+obj[key]!==null
+){
+return obj[key];
+}
+
+}
+
+return fallback;
+}
+
+
+/* Normalize RUN */
+
+function normalizeRun(run){
+
+const distance=Number(
+first(
+run,
+[
+"distance",
+"miles",
+"mileage",
+"dist",
+"Distance",
+"Miles"
+],
+0
+)
+);
+
+const rawTime=first(
+run,
+[
+"timeSec",
+"timeSeconds",
+"seconds",
+"durationSeconds",
+"duration",
+"time",
+"Time"
+],
+0
+);
+
+return{
+id:first(
+run,
+["id","ID","runId"],
+id()
+),
+date:first(
+run,
+[
+"date",
+"runDate",
+"Date",
+"RunDate"
+],
+localDate()
+),
+distance:distance,
+timeSec:parseTime(rawTime),
+note:first(
+run,
+[
+"note",
+"notes",
+"Note",
+"Notes"
+],
+""
+)
+};
+
+}
+
+
+/* Normalize PR */
+
+function normalizePR(pr){
+
+const distance=String(
+first(
+pr,
+[
+"distance",
+"name",
+"label",
+"Distance",
+"Name",
+"Label"
+],
+""
+)
+).trim();
+
+const rawTime=first(
+pr,
+[
+"timeSec",
+"timeSeconds",
+"seconds",
+"durationSeconds",
+"duration",
+"time",
+"Time"
+],
+0
+);
+
+return{
+id:first(
+pr,
+["id","ID","prId"],
+id()
+),
+distance:distance,
+timeSec:parseTime(rawTime)
+};
+
+}
+
+
+/*
+ * STANDARD RUN LOG FORMAT
+ */
+
+if(
+json &&
+typeof json==="object" &&
+!Array.isArray(json)
+){
+
+const runLists=[
+json.runs,
+json.Runs,
+json.runLog,
+json.runLogs,
+json.history,
+json.RunsLogged
+];
+
+for(const list of runLists){
+
+if(Array.isArray(list)){
+
+importedRuns=
+list
+.map(normalizeRun)
+.filter(run=>
+run.distance>0 &&
+run.date
+);
+
+break;
+}
+
+}
+
+
+const prLists=[
+json.prs,
+json.PRs,
+json.personalBests,
+json.personal_best,
+json.personalRecords,
+json.personal_records,
+json.personalBests,
+json.records
+];
+
+for(const list of prLists){
+
+if(Array.isArray(list)){
+
+importedPRs=
+list
+.map(normalizePR)
+.filter(pr=>
+pr.distance &&
+pr.timeSec>0
+);
+
+break;
+}
+
+}
+
+
+/*
+ * Goal
+ */
+
+const goal=first(
+json,
+[
+"goal",
+"weeklyGoal",
+"weekly_goal",
+"mileageGoal"
+],
+null
+);
+
+if(
+goal!==null &&
+!isNaN(Number(goal))
+){
+
+data.goal=Number(goal);
+
+}
+
+
+/*
+ * Look through nested arrays if the
+ * normal property names weren't found.
+ */
+
+if(
+!importedRuns.length ||
+!importedPRs.length
+){
+
+for(
+const value of Object.values(json)
+){
+
+if(!Array.isArray(value)){
+continue;
+}
+
+
+/*
+ * Look for runs.
+ */
+
+if(!importedRuns.length){
+
+const possibleRuns=
+value
+.map(normalizeRun)
+.filter(run=>
+run.distance>0 &&
+run.date
+);
+
+if(possibleRuns.length){
+importedRuns=possibleRuns;
+}
+
+}
+
+
+/*
+ * Look for PRs.
+ */
+
+if(!importedPRs.length){
+
+const possiblePRs=
+value
+.map(normalizePR)
+.filter(pr=>
+pr.distance &&
+pr.timeSec>0
+);
+
+if(possiblePRs.length){
+importedPRs=possiblePRs;
+}
+
+}
+
+}
+
+}
+
+}
+
+
+/*
+ * PLAIN ARRAY FORMAT
+ */
+
+if(Array.isArray(json)){
+
+for(const item of json){
+
+if(
+!item ||
+typeof item!=="object"
+){
+continue;
+}
+
+const hasDate=
+item.date!==undefined||
+item.runDate!==undefined||
+item.Date!==undefined||
+item.RunDate!==undefined;
+
+const hasDistance=
+item.distance!==undefined||
+item.miles!==undefined||
+item.mileage!==undefined||
+item.Distance!==undefined||
+item.Miles!==undefined;
+
+const hasTime=
+item.time!==undefined||
+item.timeSec!==undefined||
+item.timeSeconds!==undefined||
+item.seconds!==undefined||
+item.Time!==undefined;
+
+
+/*
+ * A run has a date.
+ */
+
+if(
+hasDate &&
+hasDistance
+){
+
+const run=
+normalizeRun(item);
+
+if(run.distance>0){
+importedRuns.push(run);
+}
+
+}
+
+
+/*
+ * A PR has distance/time but
+ * does not have a date.
+ */
+
+else if(
+hasDistance &&
+hasTime
+){
+
+const pr=
+normalizePR(item);
+
+if(
+pr.distance &&
+pr.timeSec>0
+){
+
+importedPRs.push(pr);
+
+}
+
+}
+
+}
+
+}
+
+
+/*
+ * Remove duplicate IDs.
+ */
+
+importedRuns=
+importedRuns.filter(
+(run,index,array)=>
+index===
+array.findIndex(
+other=>other.id===run.id
+)
+);
+
+importedPRs=
+importedPRs.filter(
+(pr,index,array)=>
+index===
+array.findIndex(
+other=>other.id===pr.id
+)
+);
+
+
+/*
+ * Only replace a section if that section
+ * actually existed in the imported file.
+ */
+
+if(importedRuns.length){
+
+data.runs=importedRuns;
+
+}
+
+if(importedPRs.length){
+
+data.prs=importedPRs;
+
+}
+
+
+/*
+ * If nothing was found, report the problem.
+ */
+
+if(
+!importedRuns.length &&
+!importedPRs.length
+){
+
+throw new Error(
+"No recognizable run or PR data found."
+);
+
+}
+
+
+/*
+ * Sort runs newest first.
+ */
+
+data.runs.sort(
+(a,b)=>b.date.localeCompare(a.date)
+);
+
+
+/*
+ * Save everything.
+ */
+
+localStorage.setItem(
+KEY,
+JSON.stringify(data)
+);
+
+render();
+
+
+document.getElementById("importStatus")
+.textContent=
+"Imported "+
+importedRuns.length+
+" runs and "+
+importedPRs.length+
+" PRs.";
+
+alert(
+"Import successful!\n\n"+
+"Runs imported: "+
+importedRuns.length+
+"\n"+
+"PRs imported: "+
+importedPRs.length
+);
+
+
+}catch(error){
+
+console.error(
+"JSON import error:",
+error
+);
+
+document.getElementById("importStatus")
+.textContent="Import failed.";
+
+alert(
+"Import failed.\n\n"+
+"The JSON file could not be recognized."
+);
+
+}
+
+input.value="";
+
+};
+
+reader.onerror=function(){
+
+alert("Could not read the JSON file.");
+
+input.value="";
+
+};
+
+reader.readAsText(file);
+
+}
+
+
+/* EXPORT */
+
+function exportData(){
+
+const exportObject={
+runs:data.runs,
+prs:data.prs,
+goal:data.goal
+};
+
+const blob=new Blob(
+[
+JSON.stringify(
+exportObject,
+null,
+2
+)
+],
+{
+type:"application/json"
+}
+);
+
+const url=
+URL.createObjectURL(blob);
+
+const link=
+document.createElement("a");
+
+link.href=url;
+link.download="run-log.json";
+
+document.body.appendChild(link);
+
+link.click();
+
+link.remove();
+
+URL.revokeObjectURL(url);
+}
+
+
+/* MODALS */
+
+function closeModal(modalId){
+
+document
+.getElementById(modalId)
+.classList.remove("show");
+}
+
+
+/* INITIAL RENDER */
+
+function render(){
+
+document.getElementById("today")
+.textContent=
+new Date().toLocaleDateString(
+undefined,
+{
+weekday:"long",
+month:"short",
+day:"numeric",
+year:"numeric"
+}
+);
+
+renderHome();
+renderHistory();
+renderPRs();
+}
+
+render();
+
 </script>
 
 </body>
