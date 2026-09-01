@@ -19,7 +19,7 @@ h1,h2,h3{font-family:"Space Grotesk",sans-serif;margin:0}h1{font-size:24px}.sub{
 .range-row{display:flex;gap:6px;margin-bottom:12px}.range-btn{flex:1;border:1px solid var(--border);background:var(--surface);color:var(--dim);border-radius:7px;padding:7px 4px;font-size:11px;cursor:pointer}.range-btn.active{color:var(--accent);border-color:var(--accent)}.chart{height:170px;display:flex;align-items:flex-end;gap:4px}.bar-wrap{flex:1;height:100%;display:flex;align-items:flex-end;justify-content:center}.bar{width:100%;max-width:18px;background:var(--accent);border-radius:3px 3px 0 0;min-height:2px}
 .pr-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.pr-card{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;min-height:112px}.pr-label{color:var(--dim);font-size:11px;margin-bottom:10px}.pr-time{display:block;background:none;border:0;padding:0;font-family:"Space Grotesk",sans-serif;font-size:22px;font-weight:600;cursor:pointer;text-align:left}.pr-pace{color:var(--dim);font-size:10px;margin-top:5px}.pr-delete{position:absolute;right:6px;top:6px;color:var(--dim)}
 .modal-back{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:flex-end;justify-content:center;padding:16px;z-index:20}.modal{width:100%;max-width:480px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px}.modal h2{margin-bottom:16px}.field{margin-bottom:12px}.field label{display:block;color:var(--dim);font-size:11px;margin-bottom:5px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}.error{color:#ff7d7d;font-size:12px;margin-top:8px}
-.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:64px;background:rgba(23,25,15,.97);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(3,1fr);z-index:10}.nav-btn{border:0;background:none;color:var(--dim);cursor:pointer;font-size:11px}.nav-btn.active{color:var(--accent)}.nav-icon{display:block;font-size:17px;margin-bottom:2px}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:64px;background:rgba(23,25,15,.97);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(3,1fr);z-index:10}.nav-btn{border:0;background:none;color:var(--dim);cursor:pointer;font-size:11px}.nav-btn.active{color:var(--accent)}.nav-icon{display:block;font-size:17px;margin-bottom:2px}.data-btn{font-size:10px;padding:6px 9px}
 </style>
 </head>
 <body>
@@ -84,18 +84,16 @@ function estimate(p){
  return best?Math.round(best):null;
 }
 function prCard(p){
- let actual=actualPB(p);
- let t=actual||(!actual&&p.timeSec?p.timeSec:estimate(p));
- let est=!actual&&!p.timeSec&&!!t;
- if(state.editingPrId===p.id)return`<div class="pr-card"><button class="btn-icon pr-delete" onclick="deletePr('${p.id}')">${x(12)}</button><div class="pr-label">${esc(p.label)}</div><input class="text-input" id="pri-${p.id}" placeholder="mm:ss" value="${p.timeSec?fmt(p.timeSec):""}" style="width:100%;font-size:15px;padding:6px 8px;min-height:34px;margin-bottom:6px"><div><button class="btn-icon" onclick="let s=time(document.getElementById('pri-${p.id}').value);if(s)updatePr('${p.id}',s)">${check()}</button><button class="btn-icon" onclick="setState({editingPrId:null})">${x()}</button></div></div>`;
+ let actual=actualPB(p),manual=p.timeSec&&!p.estimated?p.timeSec:null,t=actual||manual||estimate(p),est=!actual&&!manual&&!!t;
+ if(state.editingPrId===p.id)return`<div class="pr-card"><button class="btn-icon pr-delete" onclick="deletePr('${p.id}')">${x(12)}</button><div class="pr-label">${esc(p.label)}</div><input class="text-input" id="pri-${p.id}" placeholder="mm:ss" value="${manual?fmt(manual):""}" style="width:100%;font-size:15px;padding:6px 8px;min-height:34px;margin-bottom:6px"><div><button class="btn-icon" onclick="let s=time(document.getElementById('pri-${p.id}').value);if(s)updatePr('${p.id}',s)">${check()}</button><button class="btn-icon" onclick="setState({editingPrId:null})">${x()}</button></div></div>`;
  return`<div class="pr-card"><button class="btn-icon pr-delete" onclick="deletePr('${p.id}')">${x(12)}</button><div class="pr-label">${esc(p.label)}</div><button class="pr-time" onclick="setState({editingPrId:'${p.id}'})">${t?fmt(t):"—"}${est?" Est.":""}</button><div class="pr-pace">${t?"pace "+pace(t,p.distance):"tap to set"}</div></div>`
 }
-function updatePr(id,s){state.prs=state.prs.map(p=>p.id===id?{...p,timeSec:s}:p);save(LS.prs,state.prs);setState({editingPrId:null})}
+function updatePr(id,s){state.prs=state.prs.map(p=>p.id===id?{...p,timeSec:s,estimated:false}:p);save(LS.prs,state.prs);setState({editingPrId:null})}
 function deletePr(id){state.prs=state.prs.filter(p=>p.id!==id);save(LS.prs,state.prs);setState({editingPrId:null})}
 function addPr(label,distance){
  label=String(label).trim();distance=Number(distance);
  if(!label||!distance||distance<=0)return;
- state.prs.push({id:"pr-"+Date.now(),label,distance,timeSec:null});
+ state.prs.push({id:"pr-"+Date.now(),label,distance,timeSec:null,estimated:false});
  save(LS.prs,state.prs);setState({showAddPr:false})
 }
 
@@ -137,20 +135,20 @@ function home(){
  let y=state.calendarYear,m=state.calendarMonth,key=monthKey(y,m),miles=state.runs.filter(r=>r.date.startsWith(key)).reduce((s,r)=>s+Number(r.distance||0),0),goal=getGoal(y,m),pct=goal?Math.min(100,miles/goal*100):0,s=streak();
  return`<header class="top"><div><h1>Run log</h1><p class="sub">Track distance, pace, and personal bests.</p></div><button class="btn btn-primary" onclick="setState({showAddRun:true})">${plus()} Log a run</button></header>
  ${calendar()}<section class="card hero"><div class="hero-top"><div><div class="hero-number">${miles.toFixed(1)} <span class="hero-unit">mi</span></div><div class="hero-label">this month</div></div>${s?`<div class="streak">${flame()} ${s} day${s===1?"":"s"} running</div>`:""}</div>
- <div class="lane"><div class="lane-fill" style="width:${pct}%"></div></div><div class="lane-caption">${state.editingGoal?goalEdit(goal):`<button class="link" onclick="setState({editingGoal:true})">goal: ${goal} mi/month ${pencil()}</button>`}</div></section>
- <section class="card"><div class="section-head"><h2>Data</h2></div><div style="display:flex;gap:8px"><button class="btn" style="flex:1" onclick="document.getElementById('import-file').click()">Import JSON</button><button class="btn" style="flex:1" onclick="exportJSON()">Export JSON</button></div><input id="import-file" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(this.files[0])"></section>`
+ <div class="lane"><div class="lane-fill" style="width:${pct}%"></div></div><div class="lane-caption">${state.editingGoal?goalEdit(goal):`<button class="link" onclick="setState({editingGoal:true})">goal: ${goal} mi/month ${pencil()}</button>`}</div></section>`
 }
 function history(){
  let runs=[...state.runs].sort((a,b)=>b.date.localeCompare(a.date)),weeks=state.chartRange==="10w"?10:state.chartRange==="3m"?13:52,now=new Date(),values=[],max=0;
  for(let i=weeks-1;i>=0;i--){let end=new Date(now);end.setDate(end.getDate()-i*7);let start=new Date(end);start.setDate(start.getDate()-6);let total=runs.reduce((s,r)=>{let d=new Date(r.date+"T00:00:00");return d>=start&&d<=end?s+Number(r.distance||0):s},0);values.push({total,label:`${end.getMonth()+1}/${end.getDate()}`});max=Math.max(max,total)}
  return`<header class="top"><div><h1>History</h1><p class="sub">Your logged runs.</p></div><button class="btn btn-primary" onclick="setState({showAddRun:true})">${plus()} Log a run</button></header>
  <section class="card"><div class="section-head"><h2>Mileage</h2></div><div class="range-row"><button class="range-btn ${state.chartRange==="10w"?"active":""}" onclick="setState({chartRange:'10w'})">10 weeks</button><button class="range-btn ${state.chartRange==="3m"?"active":""}" onclick="setState({chartRange:'3m'})">3 months</button><button class="range-btn ${state.chartRange==="1y"?"active":""}" onclick="setState({chartRange:'1y'})">1 year</button></div><div class="chart">${values.map(v=>`<div class="bar-wrap"><div class="bar" style="height:${max?Math.max(2,v.total/max*100):2}%"></div></div>`).join("")}</div></section>
- <section class="card"><div class="section-head"><h2>Runs</h2></div>${runs.length?runs.map(r=>`<div class="run-row"><div><div class="run-distance">${Number(r.distance).toFixed(2)} mi</div><div class="run-date">${new Date(r.date+"T00:00:00").toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})}</div></div><div class="run-right"><div><div class="run-time">${fmt(r.timeSec)}</div><div class="run-pace">${pace(r.timeSec,r.distance)}</div></div><button class="btn-icon" onclick="setState({editingRunId:'${r.id}'})">${pencil()}</button></div></div>`).join(""):`<div class="empty">No runs logged yet.</div>`}</section>`
+ <section class="card"><div class="section-head"><h2>Runs</h2><div style="display:flex;gap:5px"><button class="btn data-btn" onclick="document.getElementById('import-file').click()">Import</button><button class="btn data-btn" onclick="exportJSON()">Export</button></div></div><input id="import-file" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(this.files[0])">${runs.length?runs.map(r=>`<div class="run-row"><div><div class="run-distance">${Number(r.distance).toFixed(2)} mi</div><div class="run-date">${new Date(r.date+"T00:00:00").toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})}</div></div><div class="run-right"><div><div class="run-time">${fmt(r.timeSec)}</div><div class="run-pace">${pace(r.timeSec,r.distance)}</div></div><button class="btn-icon" onclick="setState({editingRunId:'${r.id}'})">${pencil()}</button></div></div>`).join(""):`<div class="empty">No runs logged yet.</div>`}</section>`
 }
 function prs(){return`<header class="top"><div><h1>Personal bests</h1><p class="sub">Your fastest times and estimates.</p></div></header><section class="block"><div class="pr-grid">${state.prs.map(prCard).join("")}</div><button class="btn add-pr" style="margin-top:10px;width:100%" onclick="setState({showAddPr:true})">${plus()} Add personal best</button></section>`}
 
 function exportJSON(){
- let blob=new Blob([JSON.stringify({runs:state.runs,prs:state.prs,goal:state.goal},null,2)],{type:"application/json"}),a=document.createElement("a");
+ let prs=state.prs.map(p=>({...p,estimated:!actualPB(p)&&!p.timeSec&&!!estimate(p)}));
+ let blob=new Blob([JSON.stringify({runs:state.runs,prs,goal:state.goal},null,2)],{type:"application/json"}),a=document.createElement("a");
  a.href=URL.createObjectURL(blob);a.download="run-log.json";a.click();URL.revokeObjectURL(a.href)
 }
 function importJSON(file){
@@ -160,7 +158,17 @@ function importJSON(file){
   try{
    let d=JSON.parse(e.target.result);
    if(Array.isArray(d.runs)){state.runs=d.runs;save(LS.runs,state.runs)}
-   if(Array.isArray(d.prs)){state.prs=d.prs.map(p=>({...p,timeSec:p.timeSec?Number(p.timeSec):null}));save(LS.prs,state.prs)}
+   if(Array.isArray(d.prs)){
+    state.prs=d.prs.map(p=>{
+     let copy={...p,timeSec:p.timeSec?Number(p.timeSec):null,estimated:!!p.estimated};
+     if(copy.timeSec&&!copy.estimated&&state.runs.length){
+      let est=estimate(copy);
+      if(est&&Math.abs(copy.timeSec-est)<=2)copy.timeSec=null,copy.estimated=true;
+     }
+     return copy
+    });
+    save(LS.prs,state.prs)
+   }
    if(typeof d.goal==="number"||typeof d.goal==="object"){state.goal=d.goal;save(LS.goal,state.goal)}
    render()
   }catch(err){alert("Invalid JSON file.")}
