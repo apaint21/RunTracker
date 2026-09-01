@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,13 +39,10 @@ const DEFAULT_PRS=[
 ];
 const LS={runs:"runtracker_runs",prs:"runtracker_prs",goal:"runtracker_goal"};
 const DAY=86400000;
-
 let state={
 runs:load(LS.runs,[]),prs:load(LS.prs,DEFAULT_PRS),goal:load(LS.goal,20),
-page:"home",chartRange:"10w",
-calendarMonth:new Date().getMonth(),calendarYear:new Date().getFullYear(),
-showAddRun:false,showAddPr:false,
-editingGoal:false,editingPrId:null,editingRunId:null,error:""
+page:"home",chartRange:"10w",calendarMonth:new Date().getMonth(),calendarYear:new Date().getFullYear(),
+showAddRun:false,showAddPr:false,editingGoal:false,editingPrId:null,editingRunId:null,error:""
 };
 
 function load(k,f){try{let v=localStorage.getItem(k);return v?JSON.parse(v):f}catch{return f}}
@@ -53,6 +51,16 @@ function setState(p){state={...state,...p};render()}
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function date(d){return d.toISOString().slice(0,10)}
 function today(){return date(new Date())}
+function monthKey(y,m){return `${y}-${String(m+1).padStart(2,"0")}`}
+function getGoal(y,m){
+ let g=state.goal?.[monthKey(y,m)];
+ return g==null?state.goal?.[monthKey(new Date().getFullYear(),new Date().getMonth())]??20:g
+}
+function setGoal(v){
+ let goals=typeof state.goal==="object"&&state.goal!==null?{...state.goal}:{[monthKey(new Date().getFullYear(),new Date().getMonth())]:Number(state.goal)||20};
+ goals[monthKey(state.calendarYear,state.calendarMonth)]=v;
+ state.goal=goals;save(LS.goal,goals);setState({editingGoal:false})
+}
 function week(s){let d=new Date(s+"T00:00:00"),n=d.getDay();d.setDate(d.getDate()-(n+6)%7);return date(d)}
 function time(s){
  if(!s)return null;
@@ -74,7 +82,26 @@ function deleteRun(id){state.runs=state.runs.filter(r=>r.id!==id);save(LS.runs,s
 function addPr(p){state.prs.push({...p,id:"pr-"+Date.now()});save(LS.prs,state.prs);setState({showAddPr:false})}
 function updatePr(id,t){state.prs=state.prs.map(p=>p.id===id?{...p,timeSec:t}:p);save(LS.prs,state.prs);setState({editingPrId:null})}
 function deletePr(id){state.prs=state.prs.filter(p=>p.id!==id);save(LS.prs,state.prs);render()}
-function setGoal(v){state.goal=v;save(LS.goal,v);setState({editingGoal:false})}
+
+function actualPB(p){
+ let runs=state.runs.filter(r=>Number(r.distance)===Number(p.distance)&&r.timeSec);
+ return runs.length?Math.min(...runs.map(r=>Number(r.timeSec))):null
+}
+function estimate(p){
+ let best=null;
+ state.runs.forEach(r=>{
+  let d=Number(r.distance),t=Number(r.timeSec),target=Number(p.distance);
+  if(d>0&&t>0&&target>0){
+   let predicted=t*Math.pow(target/d,1.06);
+   if(best==null||predicted<best)best=predicted
+  }
+ });
+ return best?Math.round(best):null
+}
+function pbTime(p){
+ return actualPB(p)||(!actualPB(p)?(p.timeSec||estimate(p)):null)
+}
+function isEstimated(p){return !actualPB(p)&&!p.timeSec&&!!estimate(p)}
 
 function exportData(){
  let a=document.createElement("a"),u=URL.createObjectURL(new Blob([JSON.stringify({runs:state.runs,prs:state.prs,goal:state.goal,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"}));
@@ -89,12 +116,9 @@ function importData(file){
    let d=JSON.parse(e.target.result);if(!d||typeof d!=="object")throw 0;
    if(Array.isArray(d.runs)){state.runs=d.runs.map((x,i)=>({...x,id:x.id||`run-${Date.now()}-${i}`}));save(LS.runs,state.runs)}
    if(Array.isArray(d.prs)){
-    state.prs=d.prs.map((p,i)=>({
-     id:p.id||`pr-${Date.now()}-${i}`,label:String(p.label??""),
-     distance:Number(p.distance)||0,timeSec:p.timeSec==null||p.timeSec===""?null:Number(p.timeSec)
-    })).filter(p=>p.label&&p.distance>0);save(LS.prs,state.prs)
+    state.prs=d.prs.map((p,i)=>({id:p.id||`pr-${Date.now()}-${i}`,label:String(p.label??""),distance:Number(p.distance)||0,timeSec:p.timeSec==null||p.timeSec===""?null:Number(p.timeSec)})).filter(p=>p.label&&p.distance>0);save(LS.prs,state.prs)
    }
-   if(typeof d.goal==="number"){state.goal=d.goal;save(LS.goal,state.goal)}
+   if(typeof d.goal==="number"||typeof d.goal==="object"){state.goal=d.goal;save(LS.goal,state.goal)}
    render()
   }catch{alert("That file couldn't be read as a run log export.")}
  };
@@ -109,12 +133,14 @@ function render(){
 }
 
 function home(){
- let start=week(today()),m=state.runs.filter(r=>week(r.date)===start).reduce((s,r)=>s+Number(r.distance||0),0),pct=state.goal?Math.min(100,m/state.goal*100):0,s=streak();
+ let y=state.calendarYear,m=state.calendarMonth,key=monthKey(y,m);
+ let miles=state.runs.filter(r=>r.date.startsWith(key)).reduce((s,r)=>s+Number(r.distance||0),0);
+ let goal=getGoal(y,m),pct=goal?Math.min(100,miles/goal*100):0,s=streak();
  return `<header class="top"><div><h1>Run log</h1><p class="sub">Track distance, pace, and personal bests.</p></div><button class="btn btn-primary" onclick="setState({showAddRun:true})">${plus()} Log a run</button></header>
  ${calendar()}
- <section class="card hero"><div class="hero-top"><div><div class="hero-number">${m.toFixed(1)} <span class="hero-unit">mi</span></div><div class="hero-label">this week</div></div>${s?`<div class="streak">${flame()} ${s} day${s===1?"":"s"} running</div>`:""}</div>
+ <section class="card hero"><div class="hero-top"><div><div class="hero-number">${miles.toFixed(1)} <span class="hero-unit">mi</span></div><div class="hero-label">this month</div></div>${s?`<div class="streak">${flame()} ${s} day${s===1?"":"s"} running</div>`:""}</div>
  <div class="lane"><div class="lane-fill" style="width:${pct}%"></div></div>
- <div class="lane-caption">${state.editingGoal?goalEdit():`<button class="link" onclick="setState({editingGoal:true})">goal: ${state.goal} mi/week ${pencil()}</button>`}</div></section>`
+ <div class="lane-caption">${state.editingGoal?goalEdit(goal):`<button class="link" onclick="setState({editingGoal:true})">goal: ${goal} mi/month ${pencil()}</button>`}</div></section>`
 }
 
 function changeMonth(n){
@@ -124,16 +150,12 @@ function changeMonth(n){
 
 function calendar(){
  let y=state.calendarYear,m=state.calendarMonth,first=new Date(y,m,1),days=new Date(y,m+1,0).getDate(),off=(first.getDay()+6)%7,set=new Set(state.runs.map(r=>r.date)),cells="";
-
  for(let i=0;i<off;i++)cells+=`<div class="calendar-day empty-day"></div>`;
-
  for(let d=1;d<=days;d++){
   let x=`${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`,run=set.has(x);
   cells+=`<div class="calendar-day ${run?"has-run":""} ${x===today()?"today":""}">${d}${run?`<span class="calendar-check">${check(13)}</span>`:""}</div>`
  }
-
  let title=new Date(y,m,1).toLocaleDateString(undefined,{month:"long",year:"numeric"});
-
  return `<section class="block"><div class="calendar"><div class="calendar-head"><button class="btn-icon" onclick="changeMonth(-1)">‹</button><div class="calendar-title">${title}</div><button class="btn-icon" onclick="changeMonth(1)">›</button></div><div class="calendar-weekdays">${"MTWTFSS".split("").map(x=>`<div class="calendar-weekday">${x}</div>`).join("")}</div><div class="calendar-grid">${cells}</div></div></section>`
 }
 
@@ -168,13 +190,14 @@ function prs(){
  <div class="footer-row"><button class="link" onclick="exportData()">${download()} export data</button><button class="link" onclick="document.getElementById('pr-import').click()">${upload()} import data</button><input id="pr-import" type="file" accept="application/json" hidden onchange="importData(this.files[0])"></div>`
 }
 
-function goalEdit(){
- return `<span style="display:inline-flex;align-items:center;gap:6px;color:var(--dim);font-size:12.5px">goal:<input id="goal" type="number" min="0" step=".5" value="${state.goal}" class="text-input" style="width:60px;min-height:30px;padding:4px 6px;font-size:12.5px">mi/week<button class="btn-icon" onclick="setGoal(Number(document.getElementById('goal').value)||0)">${check()}</button><button class="btn-icon" onclick="setState({editingGoal:false})">${x()}</button></span>`
+function goalEdit(goal){
+ return `<span style="display:inline-flex;align-items:center;gap:6px;color:var(--dim);font-size:12.5px">goal:<input id="goal" type="number" min="0" step=".5" value="${goal}" class="text-input" style="width:60px;min-height:30px;padding:4px 6px;font-size:12.5px">mi/month<button class="btn-icon" onclick="setGoal(Number(document.getElementById('goal').value)||0)">${check()}</button><button class="btn-icon" onclick="setState({editingGoal:false})">${x()}</button></span>`
 }
 
 function prCard(p){
+ let actual=actualPB(p),t=actual||(!actual&&p.timeSec?p.timeSec:estimate(p)),est=!actual&&!p.timeSec&&!!t;
  if(state.editingPrId===p.id)return `<div class="pr-card"><button class="btn-icon pr-delete" onclick="deletePr('${p.id}')">${x(12)}</button><div class="pr-label">${esc(p.label)}</div><input class="text-input" id="pri-${p.id}" placeholder="mm:ss" value="${p.timeSec?fmt(p.timeSec):""}" style="width:100%;font-size:15px;padding:6px 8px;min-height:34px;margin-bottom:6px"><div><button class="btn-icon" onclick="let s=time(document.getElementById('pri-${p.id}').value);if(s)updatePr('${p.id}',s)">${check()}</button><button class="btn-icon" onclick="setState({editingPrId:null})">${x()}</button></div></div>`;
- return `<div class="pr-card"><button class="btn-icon pr-delete" onclick="deletePr('${p.id}')">${x(12)}</button><div class="pr-label">${esc(p.label)}</div><button class="pr-time" onclick="setState({editingPrId:'${p.id}'})">${fmt(p.timeSec)}</button><div class="pr-pace">${p.timeSec?"pace "+pace(p.timeSec,p.distance):"tap to set"}</div></div>`
+ return `<div class="pr-card"><button class="btn-icon pr-delete" onclick="deletePr('${p.id}')">${x(12)}</button><div class="pr-label">${esc(p.label)}</div><button class="pr-time" onclick="setState({editingPrId:'${p.id}'})">${t?fmt(t):"—"}${est?" Est.":""}</button><div class="pr-pace">${t?"pace "+pace(t,p.distance):"tap to set"}</div></div>`
 }
 
 function addPrForm(){
@@ -227,3 +250,4 @@ render();
 </script>
 </body>
 </html>
+```
