@@ -252,10 +252,29 @@ function esc(str) {
 // ---------- mutations ----------
 function setState(patch) { state = { ...state, ...patch }; render(); }
 
+const PR_MATCH_TOLERANCE = 0.05; // miles
+
 function addRun(run) {
   state.runs = [{ ...run, id: "run-" + Date.now() }, ...state.runs];
   saveLS(LS_RUNS, state.runs);
+  applyRunToPRs(run);
   setState({ showAddRun: false, addRunError: "" });
+}
+
+// If this run's distance matches a tracked PR distance and beats the
+// current best (or there is no best yet), update that PR automatically.
+function applyRunToPRs(run) {
+  let changed = false;
+  state.prs = state.prs.map(pr => {
+    const withinTolerance = Math.abs(run.distance - pr.distance) <= PR_MATCH_TOLERANCE;
+    if (!withinTolerance) return pr;
+    if (pr.timeSec === null || pr.timeSec === undefined || run.timeSec < pr.timeSec) {
+      changed = true;
+      return { ...pr, timeSec: run.timeSec };
+    }
+    return pr;
+  });
+  if (changed) saveLS(LS_PRS, state.prs);
 }
 function deleteRun(id) {
   state.runs = state.runs.filter(r => r.id !== id);
