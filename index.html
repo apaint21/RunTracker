@@ -2,1664 +2,1695 @@
 
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <title>Run Log</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-
 <style>
-:root{
---bg:#11130f;
---card:#191c16;
---line:#30342b;
---text:#f2f3ed;
---muted:#92988b;
---accent:#c7f36b;
---danger:#ff7777
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+:root {
+--bg:#0E0F0C;
+--surface:#17190F;
+--border:#2A2E1E;
+--text:#ECEEE4;
+--text-dim:#8C9080;
+--accent:#B6FF3B;
+--accent-dim:rgba(182,255,59,.12);
+--accent-text:#0E0F0C;
 }
+
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--text)}
-body{font-family:"IBM Plex Sans",sans-serif}
-button,input{font:inherit}
-button{cursor:pointer}
-.app{width:min(100%,480px);min-height:100vh;margin:auto;padding:20px 16px 90px}
-h1,h2,h3{font-family:"Space Grotesk",sans-serif;margin:0}
-h1{font-size:28px}
-h2{font-size:20px;margin-bottom:14px}
-.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
-.sub{color:var(--muted);font-size:13px}
-.hero,.card{background:var(--card);border:1px solid var(--line);border-radius:16px}
-.hero{padding:20px;margin-bottom:12px}
-.hero-label{color:var(--muted);font-size:13px}
-.hero-value{font:700 42px "Space Grotesk";margin:4px 0}
-.hero-value span{font-size:18px;color:var(--muted)}
-.progress{height:7px;background:#292d24;border-radius:9px;overflow:hidden;margin:14px 0 8px}
-.progress i{display:block;height:100%;background:var(--accent);width:0}
-.row{display:flex;justify-content:space-between;align-items:center}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.stat strong{display:block;font:600 25px "Space Grotesk";margin-top:3px}
-.label{font-size:12px;color:var(--muted)}
-.section{margin-top:24px}
-.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
-.cal-head{font-size:10px;color:var(--muted);text-align:center;padding-bottom:4px}
-.day{height:38px;border:1px solid var(--line);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted)}
-.day.run{color:var(--bg);background:var(--accent);border-color:var(--accent);font-weight:600}
-.day.today{outline:1px solid var(--accent);outline-offset:1px}
-.chart{height:180px;display:flex;align-items:end;gap:7px;padding:20px 4px 4px}
-.bar-wrap{flex:1;height:100%;display:flex;flex-direction:column;justify-content:end;align-items:center;gap:5px}
-.bar{width:100%;max-width:28px;background:var(--accent);border-radius:5px 5px 2px 2px;min-height:2px}
-.bar-label{font-size:9px;color:var(--muted)}
-.run-list{display:flex;flex-direction:column;gap:8px}
-.run{
+
+html,body{
+margin:0;
+background:var(--bg);
+color:var(--text);
+font-family:'IBM Plex Sans',sans-serif;
+-webkit-tap-highlight-color:transparent;
+}
+
+#app{
+max-width:480px;
+margin:0 auto;
+padding:20px 16px 86px;
+}
+
+h1{
+font-family:'Space Grotesk',sans-serif;
+font-size:24px;
+font-weight:600;
+margin:0;
+letter-spacing:-.01em;
+}
+
+h2{
+font-family:'Space Grotesk',sans-serif;
+font-size:15.5px;
+font-weight:600;
+margin:0 0 10px;
+}
+
+.sub{
+color:var(--text-dim);
+font-size:13px;
+margin:4px 0 0;
+}
+
+header.top{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+margin-bottom:20px;
+gap:10px;
+}
+
+.btn{
+display:inline-flex;
+align-items:center;
+gap:6px;
+border-radius:8px;
+border:1px solid var(--border);
+background:transparent;
+color:var(--text);
+font-family:'IBM Plex Sans',sans-serif;
+font-size:13.5px;
+font-weight:500;
+padding:10px 14px;
+cursor:pointer;
+min-height:40px;
+}
+
+.btn-primary{
+background:var(--accent);
+border-color:var(--accent);
+color:var(--accent-text);
+font-weight:600;
+}
+
+.btn-ghost{color:var(--text-dim)}
+.btn-sm{padding:7px 11px;font-size:12.5px;min-height:34px}
+
+.btn-icon{
+background:none;
+border:none;
+color:var(--text-dim);
+cursor:pointer;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+padding:6px;
+border-radius:6px;
+min-width:32px;
+min-height:32px;
+}
+
+.btn-icon:active{background:rgba(255,255,255,.08)}
+
+.card{
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:12px;
+padding:18px 16px;
+}
+
+.hero{margin-bottom:24px}
+
+.hero-top{
+display:flex;
+justify-content:space-between;
+align-items:flex-end;
+flex-wrap:wrap;
+gap:8px;
+}
+
+.hero-number{
+font-family:'Space Grotesk',sans-serif;
+font-size:40px;
+font-weight:700;
+line-height:1;
+}
+
+.hero-unit{
+font-size:18px;
+color:var(--text-dim);
+font-weight:500;
+}
+
+.hero-label{
+color:var(--text-dim);
+font-size:12.5px;
+margin-top:4px;
+}
+
+.streak{
+display:flex;
+align-items:center;
+gap:6px;
+color:var(--accent);
+font-size:13px;
+font-weight:500;
+}
+
+.lane{
+margin-top:16px;
+height:8px;
+border-radius:999px;
+background:#23261A;
+overflow:hidden;
+}
+
+.lane-fill{
+height:100%;
+background:linear-gradient(90deg,var(--accent),#E8FFA0);
+border-radius:999px;
+}
+
+.lane-caption{
+margin-top:9px;
+font-size:12.5px;
+}
+
+.link{
+background:none;
+border:none;
+color:var(--text-dim);
+font-size:12.5px;
+font-family:'IBM Plex Sans',sans-serif;
+display:inline-flex;
+align-items:center;
+gap:5px;
+cursor:pointer;
+padding:0;
+min-height:32px;
+}
+
+section.block{margin-bottom:24px}
+
+.section-head{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:10px;
+}
+
+.section-head h2{margin:0}
+
+.calendar{
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:12px;
+padding:16px 10px 12px;
+}
+
+.calendar-head{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:12px;
+}
+
+.calendar-title{
+font-family:'Space Grotesk',sans-serif;
+font-size:15px;
+font-weight:600;
+}
+
+.calendar-weekdays,
+.calendar-grid{
 display:grid;
-grid-template-columns:42px minmax(0,1fr) auto auto 28px 28px;
+grid-template-columns:repeat(7,1fr);
+gap:4px;
+}
+
+.calendar-weekday{
+text-align:center;
+color:var(--text-dim);
+font-size:10px;
+padding-bottom:4px;
+}
+
+.calendar-day{
+height:42px;
+min-height:42px;
+max-height:42px;
+position:relative;
+display:flex;
+align-items:center;
+justify-content:center;
+border:1px solid transparent;
+border-radius:7px;
+font-size:12px;
+}
+
+.calendar-day.empty-day{visibility:hidden}
+
+.calendar-day.today{
+border-color:var(--border);
+}
+
+.calendar-day.has-run{
+color:var(--accent);
+font-weight:600;
+}
+
+.calendar-check{
+position:absolute;
+right:4px;
+bottom:3px;
+width:13px;
+height:13px;
+color:var(--accent);
+pointer-events:none;
+}
+
+.chart-wrap{
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:12px;
+padding:16px 10px 10px;
+}
+
+.chart-controls{
+display:flex;
+gap:6px;
+margin-bottom:14px;
+}
+
+.chart-option{
+flex:1;
+min-height:34px;
+border:1px solid var(--border);
+border-radius:7px;
+background:transparent;
+color:var(--text-dim);
+font-family:'IBM Plex Sans',sans-serif;
+font-size:12px;
+cursor:pointer;
+}
+
+.chart-option.active{
+background:var(--accent-dim);
+border-color:var(--accent);
+color:var(--accent);
+}
+
+.chart{
+display:flex;
+align-items:flex-end;
+gap:6px;
+height:130px;
+}
+
+.chart-col{
+flex:1;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:flex-end;
+height:100%;
+min-width:0;
+}
+
+.chart-bar{
+width:100%;
+max-width:22px;
+background:var(--accent);
+border-radius:3px 3px 0 0;
+min-height:2px;
+}
+
+.chart-tick{
+font-size:9.5px;
+color:var(--text-dim);
+margin-top:6px;
+white-space:nowrap;
+}
+
+.empty{
+color:var(--text-dim);
+font-size:13.5px;
+padding:20px;
+border:1px dashed var(--border);
+border-radius:10px;
+text-align:center;
+}
+
+.run-list{
+display:flex;
+flex-direction:column;
+border-top:1px solid var(--border);
+}
+
+.run-row{
+display:grid;
+grid-template-columns:42px 1fr auto auto 64px;
 gap:8px;
 align-items:center;
-padding:12px;
-background:var(--card);
-border:1px solid var(--line);
-border-radius:12px
+padding:12px 2px;
+border-bottom:1px solid var(--border);
+font-size:13px;
 }
-.run-date{font-size:12px;color:var(--muted)}
-.run-main{min-width:0}
-.run-distance{font-weight:600}
-.run-note{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.run-meta{font-size:11px;color:var(--muted);white-space:nowrap}
-.icon{border:0;background:none;color:var(--muted);padding:4px;font-size:16px}
-.icon:hover{color:var(--text)}
-.pr{display:flex;justify-content:space-between;align-items:center}
-.pr-info strong{display:block;font:600 18px "Space Grotesk"}
-.pr-info span{color:var(--muted);font-size:12px}
-.actions{display:flex;gap:8px}
-.btn{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:10px;padding:9px 13px}
-.btn.primary{background:var(--accent);color:var(--bg);border-color:var(--accent);font-weight:600}
-.empty{text-align:center;color:var(--muted);padding:25px}
-.nav{
+
+.run-date{
+color:var(--text-dim);
+font-size:11.5px;
+}
+
+.run-main{
+display:flex;
+flex-direction:column;
+min-width:0;
+}
+
+.run-dist{
+font-family:'Space Grotesk',sans-serif;
+font-weight:600;
+font-size:14px;
+}
+
+.run-notes{
+color:var(--text-dim);
+font-size:11.5px;
+overflow:hidden;
+text-overflow:ellipsis;
+white-space:nowrap;
+max-width:34vw;
+}
+
+.run-time{
+color:var(--text);
+font-size:12.5px;
+text-align:right;
+}
+
+.run-pace{
+color:var(--accent);
+font-size:11px;
+text-align:right;
+}
+
+.run-actions{
+display:flex;
+justify-content:flex-end;
+gap:2px;
+}
+
+.pr-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+}
+
+.pr-card{
+position:relative;
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:10px;
+padding:14px 12px;
+}
+
+.pr-label{
+font-size:11.5px;
+color:var(--text-dim);
+margin-bottom:6px;
+}
+
+.pr-time{
+background:none;
+border:none;
+font-family:'Space Grotesk',sans-serif;
+font-size:20px;
+font-weight:600;
+color:var(--text);
+cursor:pointer;
+padding:0;
+text-align:left;
+min-height:28px;
+}
+
+.pr-pace{
+font-size:11px;
+color:var(--text-dim);
+margin-top:4px;
+}
+
+.pr-delete{
+position:absolute;
+top:6px;
+right:6px;
+opacity:.4;
+}
+
+.inline-form{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+margin-top:10px;
+padding:12px;
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:10px;
+}
+
+.text-input{
+background:var(--bg);
+border:1px solid var(--border);
+border-radius:7px;
+color:var(--text);
+padding:9px 10px;
+font-family:'IBM Plex Sans',sans-serif;
+font-size:14px;
+flex:1;
+min-width:90px;
+min-height:40px;
+}
+
+.text-input:focus{
+outline:none;
+border-color:var(--accent);
+}
+
+.field{
+display:flex;
+flex-direction:column;
+gap:5px;
+margin-bottom:12px;
+font-size:12px;
+color:var(--text-dim);
+}
+
+.field-row{
+display:flex;
+gap:10px;
+}
+
+.field-row .field{flex:1}
+
+.overlay{
 position:fixed;
+inset:0;
+background:rgba(4,5,3,.7);
+display:flex;
+align-items:flex-end;
+justify-content:center;
+z-index:50;
+}
+
+.modal{
+background:var(--surface);
+border:1px solid var(--border);
+border-top-left-radius:16px;
+border-top-right-radius:16px;
+padding:20px 18px calc(20px + env(safe-area-inset-bottom));
+width:100%;
+max-width:480px;
+}
+
+.modal-head{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:16px;
+}
+
+.modal-head h3{
+font-family:'Space Grotesk',sans-serif;
+font-size:16.5px;
+margin:0;
+font-weight:600;
+}
+
+.modal-actions{
+display:flex;
+justify-content:flex-end;
+gap:8px;
+margin-top:4px;
+}
+
+.error{
+color:var(--accent);
+font-size:12.5px;
+margin-bottom:8px;
+}
+
+.footer-row{
+display:flex;
+justify-content:center;
+gap:14px;
+margin-top:8px;
+}
+
+.footer-row .link{font-size:12px}
+
+.bottom-nav{
+position:fixed;
+left:0;
+right:0;
 bottom:0;
-left:50%;
-transform:translateX(-50%);
-width:min(100%,480px);
-height:68px;
-background:#171a14ee;
-backdrop-filter:blur(12px);
-border-top:1px solid var(--line);
+z-index:40;
+background:rgba(14,15,12,.97);
+border-top:1px solid var(--border);
+}
+
+.bottom-nav-inner{
+max-width:480px;
+margin:0 auto;
+height:64px;
 display:grid;
 grid-template-columns:repeat(3,1fr);
-z-index:5
 }
-.nav button{border:0;background:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10px}
-.nav button.active{color:var(--accent)}
-.nav svg{width:21px;height:21px}
-.tab{display:none}
-.tab.active{display:block}
-.modal{position:fixed;inset:0;background:#000b;display:none;align-items:end;justify-content:center;z-index:10}
-.modal.show{display:flex}
-.sheet{width:min(100%,480px);background:var(--card);border:1px solid var(--line);border-bottom:0;border-radius:18px 18px 0 0;padding:20px 16px 25px}
-.form{display:grid;gap:12px}
-.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
-.field input{width:100%;background:#11130f;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:11px}
-.modal-actions{display:flex;gap:8px;margin-top:6px}
-.modal-actions>*{flex:1}
-.import-status{font-size:12px;color:var(--muted);margin-top:10px}
-@media(max-width:390px){
-.run{grid-template-columns:38px minmax(0,1fr) auto 28px 28px}
-.run-meta.pace{display:none}
+
+.nav-btn{
+border:none;
+background:none;
+color:var(--text-dim);
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+gap:4px;
+font-family:'IBM Plex Sans',sans-serif;
+font-size:10px;
+cursor:pointer;
 }
-</style>
+
+.nav-btn.active{color:var(--accent)}
+
+.nav-btn svg{
+width:19px;
+height:19px;
+}
+
+svg{display:block}
+
+@media(max-width:380px){
+.run-row{
+grid-template-columns:38px 1fr auto 58px;
+}
+
+```
+.run-pace{display:none}
+```
+
+} </style>
 
 </head>
 
 <body>
-
-<div class="app">
-
-<header class="header">
-<div>
-<h1>Run Log</h1>
-<div class="sub" id="today"></div>
-</div>
-<button class="btn primary" onclick="openRun()">+ Run</button>
-</header>
-
-<section id="home" class="tab active">
-
-<div class="hero">
-<div class="hero-label">Weekly mileage</div>
-<div class="hero-value">
-<span id="weekMiles">0.0</span>
-<span>/ <b id="goalText">20</b> mi</span>
-</div>
-<div class="progress"><i id="progress"></i></div>
-<div class="row sub">
-<span>Goal progress</span>
-<span id="goalPct">0%</span>
-</div>
-</div>
-
-<div class="stats">
-
-<div class="card">
-<div class="label">STREAK</div>
-<div class="stat">
-<strong id="streak">0</strong>
-<span class="label">days</span>
-</div>
-</div>
-
-<div class="card">
-<div class="label">TOTAL RUNS</div>
-<div class="stat">
-<strong id="totalRuns">0</strong>
-<span class="label">runs</span>
-</div>
-</div>
-
-</div>
-
-<div class="section">
-<h2>Calendar</h2>
-
-<div class="card">
-
-<div class="row" style="margin-bottom:12px">
-<button class="icon" onclick="changeMonth(-1)">‹</button>
-<strong id="month"></strong>
-<button class="icon" onclick="changeMonth(1)">›</button>
-</div>
-
-<div class="calendar" id="calendar"></div>
-
-</div>
-</div>
-
-</section>
-
-<section id="history" class="tab">
-
-<div class="section">
-
-<div class="row">
-<h2>Mileage</h2>
-<span class="sub">Last 10 weeks</span>
-</div>
-
-<div class="card">
-<div class="chart" id="chart"></div>
-</div>
-
-</div>
-
-<div class="section">
-
-<div class="row">
-<h2>Runs</h2>
-<button class="btn" onclick="exportData()">Export</button>
-</div>
-
-<div class="run-list" id="runs"></div>
-
-</div>
-
-<div class="section">
-
-<div class="card">
-
-<div class="row">
-<span class="label">IMPORT DATA</span>
-<button class="btn" onclick="document.getElementById('file').click()">Import JSON</button>
-</div>
-
-<input
-id="file"
-type="file"
-accept=".json,application/json"
-hidden
-onchange="importData(this)"
-
->
-
-<div id="importStatus" class="import-status"></div>
-
-</div>
-
-</div>
-
-</section>
-
-<section id="prs" class="tab">
-
-<div class="section">
-
-<div class="row">
-<h2>Personal Bests</h2>
-<button class="btn primary" onclick="openPR()">+ PR</button>
-</div>
-
-<div id="prList"></div>
-
-</div>
-
-</section>
-
-</div>
-
-<nav class="nav">
-
-<button class="active" onclick="tab('home',this)">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-<path d="M3 11.5 12 4l9 7.5"/>
-<path d="M5 10v10h14V10M9 20v-6h6v6"/>
-</svg>
-Home
-</button>
-
-<button onclick="tab('history',this)">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-<path d="M4 19V5M4 19h17"/>
-<path d="M7 16l4-5 3 2 5-7"/>
-</svg>
-History
-</button>
-
-<button onclick="tab('prs',this)">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-<path d="m12 3 2.8 5.7L21 9.6l-4.5 4.4 1.1 6.2-5.6-2.9-5.6 2.9 1.1-6.2L3 9.6l6.2-.9L12 3z"/>
-</svg>
-PRs
-</button>
-
-</nav>
-
-<div class="modal" id="runModal">
-
-<div class="sheet">
-
-<div class="row" style="margin-bottom:18px">
-<h2 id="runTitle">Add Run</h2>
-<button class="icon" onclick="closeModal('runModal')">×</button>
-</div>
-
-<div class="form">
-
-<div class="field">
-<label>DATE</label>
-<input id="rDate" type="date">
-</div>
-
-<div class="field">
-<label>DISTANCE (MILES)</label>
-<input id="rDist" type="number" step="0.01" min="0">
-</div>
-
-<div class="field">
-<label>TIME (HH:MM:SS)</label>
-<input id="rTime" placeholder="00:30:00">
-</div>
-
-<div class="field">
-<label>NOTE</label>
-<input id="rNote" maxlength="100">
-</div>
-
-<div class="modal-actions">
-<button class="btn" onclick="closeModal('runModal')">Cancel</button>
-<button class="btn primary" onclick="saveRun()">Save</button>
-</div>
-
-</div>
-</div>
-</div>
-
-<div class="modal" id="prModal">
-
-<div class="sheet">
-
-<div class="row" style="margin-bottom:18px">
-<h2 id="prTitle">Add PR</h2>
-<button class="icon" onclick="closeModal('prModal')">×</button>
-</div>
-
-<div class="form">
-
-<div class="field">
-<label>DISTANCE</label>
-<input id="pDist" placeholder="5K">
-</div>
-
-<div class="field">
-<label>TIME (HH:MM:SS)</label>
-<input id="pTime" placeholder="00:25:00">
-</div>
-
-<div class="modal-actions">
-<button class="btn" onclick="closeModal('prModal')">Cancel</button>
-<button class="btn primary" onclick="savePR()">Save</button>
-</div>
-
-</div>
-</div>
-</div>
+<div id="app"></div>
 
 <script>
-
-const KEY="runLogData";
-
-const defaultData={
-runs:[],
-prs:[],
-goal:20
-};
-
-let data;
-
-try{
-data=JSON.parse(localStorage.getItem(KEY)||"null");
-}catch{
-data=null;
-}
-
-if(!data || typeof data!=="object"){
-data=defaultData;
-}
-
-if(!Array.isArray(data.runs))data.runs=[];
-if(!Array.isArray(data.prs))data.prs=[];
-if(typeof data.goal!=="number")data.goal=20;
-
-let editRun=null;
-let editPR=null;
-let monthDate=new Date();
-
-
-function save(){
-localStorage.setItem(KEY,JSON.stringify(data));
-render();
-}
-
-
-function id(){
-return Date.now()+"-"+Math.random().toString(16).slice(2);
-}
-
-
-function pad(n){
-return String(n).padStart(2,"0");
-}
-
-
-function localDate(){
-const d=new Date();
-
-return d.getFullYear()+"-"+
-pad(d.getMonth()+1)+"-"+
-pad(d.getDate());
-}
-
-
-function localDateFrom(d){
-return d.getFullYear()+"-"+
-pad(d.getMonth()+1)+"-"+
-pad(d.getDate());
-}
-
-
-function parseTime(value){
-
-if(typeof value==="number"){
-return value;
-}
-
-if(value===null || value===undefined){
-return 0;
-}
-
-let text=String(value).trim();
-
-if(!text){
-return 0;
-}
-
-if(/^\d+(\.\d+)?$/.test(text)){
-return Number(text);
-}
-
-const parts=text.split(":").map(Number);
-
-if(parts.some(Number.isNaN)){
-return 0;
-}
-
-if(parts.length===3){
-return parts[0]*3600+
-parts[1]*60+
-parts[2];
-}
-
-if(parts.length===2){
-return parts[0]*60+
-parts[1];
-}
-
-return 0;
-}
-
-
-function time(seconds){
-
-seconds=Math.max(
-0,
-Math.round(Number(seconds)||0)
-);
-
-const hours=Math.floor(seconds/3600);
-const minutes=Math.floor((seconds%3600)/60);
-const secs=seconds%60;
-
-return pad(hours)+":"+
-pad(minutes)+":"+
-pad(secs);
-}
-
-
-function pace(run){
-
-if(!run.distance || !run.timeSec){
-return "--:--";
-}
-
-const seconds=Math.round(
-run.timeSec/run.distance
-);
-
-const minutes=Math.floor(seconds/60);
-const secs=seconds%60;
-
-return pad(minutes)+":"+pad(secs);
-}
-
-
-function displayDate(dateString){
-
-return new Date(
-dateString+"T12:00:00"
-).toLocaleDateString(
-undefined,
-{
-month:"short",
-day:"numeric"
-}
-);
-}
-
-
-function escapeHTML(value){
-
-return String(value).replace(
-/[&<>"']/g,
-char=>({
-"&":"&amp;",
-"<":"&lt;",
-">":"&gt;",
-'"':"&quot;",
-"'":"&#039;"
-}[char])
-);
-}
-
-
-function tab(name,button){
-
-document
-.querySelectorAll(".tab")
-.forEach(section=>{
-section.classList.remove("active");
-});
-
-document
-.getElementById(name)
-.classList.add("active");
-
-document
-.querySelectorAll(".nav button")
-.forEach(button=>{
-button.classList.remove("active");
-});
-
-button.classList.add("active");
-}
-
-
-/* RUNS */
-
-function openRun(run=null){
-
-editRun=run?run.id:null;
-
-document.getElementById("runTitle").textContent=
-run?"Edit Run":"Add Run";
-
-document.getElementById("rDate").value=
-run?run.date:localDate();
-
-document.getElementById("rDist").value=
-run?run.distance:"";
-
-document.getElementById("rTime").value=
-run?time(run.timeSec):"";
-
-document.getElementById("rNote").value=
-run?(run.note||""):"";
-
-document
-.getElementById("runModal")
-.classList.add("show");
-}
-
-
-function saveRun(){
-
-const dateValue=
-document.getElementById("rDate").value;
-
-const distance=
-parseFloat(
-document.getElementById("rDist").value
-);
-
-const timeValue=
-document.getElementById("rTime").value;
-
-const note=
-document.getElementById("rNote").value.trim();
-
-if(!dateValue || !distance){
-alert("Please enter a date and distance.");
-return;
-}
-
-const run={
-id:editRun||id(),
-date:dateValue,
-distance:distance,
-timeSec:parseTime(timeValue),
-note:note
-};
-
-if(editRun){
-
-data.runs=data.runs.map(existing=>
-existing.id===editRun?run:existing
-);
-
-}else{
-
-data.runs.push(run);
-
-}
-
-data.runs.sort(
-(a,b)=>b.date.localeCompare(a.date)
-);
-
-closeModal("runModal");
-save();
-}
-
-
-function deleteRun(runId){
-
-if(!confirm("Delete this run?")){
-return;
-}
-
-data.runs=data.runs.filter(
-run=>run.id!==runId
-);
-
-save();
-}
-
-
-/* PRs */
-
-function openPR(pr=null){
-
-editPR=pr?pr.id:null;
-
-document.getElementById("prTitle").textContent=
-pr?"Edit PR":"Add PR";
-
-document.getElementById("pDist").value=
-pr?pr.distance:"";
-
-document.getElementById("pTime").value=
-pr?time(pr.timeSec):"";
-
-document
-.getElementById("prModal")
-.classList.add("show");
-}
-
-
-function savePR(){
-
-const distance=
-document.getElementById("pDist").value.trim();
-
-const timeValue=
-document.getElementById("pTime").value;
-
-if(!distance || !timeValue){
-alert("Please enter distance and time.");
-return;
-}
-
-const pr={
-id:editPR||id(),
-distance:distance,
-timeSec:parseTime(timeValue)
-};
-
-if(editPR){
-
-data.prs=data.prs.map(existing=>
-existing.id===editPR?pr:existing
-);
-
-}else{
-
-data.prs.push(pr);
-
-}
-
-closeModal("prModal");
-save();
-}
-
-
-function deletePR(prId){
-
-if(!confirm("Delete this personal best?")){
-return;
-}
-
-data.prs=data.prs.filter(
-pr=>pr.id!==prId
-);
-
-save();
-}
-
-
-/* HOME */
-
-function renderHome(){
-
-const now=new Date();
-
-const startOfWeek=new Date(now);
-
-const day=(now.getDay()+6)%7;
-
-startOfWeek.setDate(
-now.getDate()-day
-);
-
-startOfWeek.setHours(0,0,0,0);
-
-const weeklyMiles=data.runs
-.filter(run=>{
-const d=new Date(
-run.date+"T12:00:00"
-);
-
-return d>=startOfWeek;
-})
-.reduce(
-(total,run)=>total+Number(run.distance||0),
-0
-);
-
-const goal=Number(data.goal)||20;
-
-const percentage=
-Math.min(
-100,
-weeklyMiles/goal*100
-);
-
-document.getElementById("weekMiles")
-.textContent=weeklyMiles.toFixed(1);
-
-document.getElementById("goalText")
-.textContent=goal;
-
-document.getElementById("goalPct")
-.textContent=Math.round(percentage)+"%";
-
-document.getElementById("progress")
-.style.width=percentage+"%";
-
-document.getElementById("totalRuns")
-.textContent=data.runs.length;
-
-document.getElementById("streak")
-.textContent=getStreak();
-
-renderCalendar();
-}
-
-
-function getStreak(){
-
-const runDays=new Set(
-data.runs.map(run=>run.date)
-);
-
-let streak=0;
-const current=new Date();
-
-if(!runDays.has(localDateFrom(current))){
-current.setDate(
-current.getDate()-1
-);
-}
-
-while(
-runDays.has(localDateFrom(current))
-){
-
-streak++;
-
-current.setDate(
-current.getDate()-1
-);
-}
-
-return streak;
-}
-
-
-/* CALENDAR */
-
-function renderCalendar(){
-
-const year=monthDate.getFullYear();
-const month=monthDate.getMonth();
-
-const first=new Date(year,month,1);
-const last=new Date(year,month+1,0);
-
-document.getElementById("month")
-.textContent=
-first.toLocaleDateString(
-undefined,
-{
-month:"long",
-year:"numeric"
-}
-);
-
-const runDates=new Set(
-data.runs.map(run=>run.date)
-);
-
-let html=
-["M","T","W","T","F","S","S"]
-.map(day=>`<div class="cal-head">${day}</div>`)
-.join("");
-
-const offset=(first.getDay()+6)%7;
-
-for(let i=0;i<offset;i++){
-html+="<div></div>";
-}
-
-for(let day=1;day<=last.getDate();day++){
-
-const dateString=
-year+"-"+pad(month+1)+"-"+pad(day);
-
-const hasRun=runDates.has(dateString);
-const today=dateString===localDate();
-
-html+=`
-<div class="day ${hasRun?"run":""} ${today?"today":""}">
-${hasRun?"✓":day}
-</div>
-`;
-}
-
-document.getElementById("calendar")
-.innerHTML=html;
-}
-
-
-function changeMonth(amount){
-
-monthDate.setMonth(
-monthDate.getMonth()+amount
-);
-
-renderCalendar();
-}
-
-
-/* HISTORY */
-
-function renderHistory(){
-
-const weeks=[];
-const now=new Date();
-
-const monday=new Date(now);
-
-const day=(monday.getDay()+6)%7;
-
-monday.setDate(
-monday.getDate()-day
-);
-
-monday.setHours(0,0,0,0);
-
-for(let i=9;i>=0;i--){
-
-const start=new Date(monday);
-
-start.setDate(
-start.getDate()-i*7
-);
-
-const end=new Date(start);
-
-end.setDate(
-end.getDate()+7
-);
-
-const miles=data.runs
-.filter(run=>{
-
-const d=new Date(
-run.date+"T12:00:00"
-);
-
-return d>=start&&d<end;
-})
-.reduce(
-(total,run)=>total+Number(run.distance||0),
-0
-);
-
-weeks.push({
-miles:miles,
-start:start
-});
-}
-
-const max=Math.max(
-1,
-...weeks.map(w=>w.miles)
-);
-
-document.getElementById("chart")
-.innerHTML=
-weeks.map(week=>{
-
-const height=
-week.miles===0
-?2
-:Math.max(
-4,
-week.miles/max*100
-);
-
-return`
-<div class="bar-wrap">
-<div class="bar" style="height:${height}%"></div>
-<div class="bar-label">${week.miles.toFixed(0)}</div>
-</div>
-`;
-
-}).join("");
-
-
-const container=
-document.getElementById("runs");
-
-if(!data.runs.length){
-
-container.innerHTML=
-`<div class="empty">No runs logged yet.</div>`;
-
-return;
-}
-
-container.innerHTML=
-data.runs
-.slice()
-.sort(
-(a,b)=>b.date.localeCompare(a.date)
-)
-.map(run=>`
-
-<div class="run">
-
-<div class="run-date">
-${displayDate(run.date)}
-</div>
-
-<div class="run-main">
-
-<div class="run-distance">
-${run.distance} mi
-</div>
-
-${
-run.note
-?`<div class="run-note">
-${escapeHTML(run.note)}
-</div>`
-:""
-}
-
-</div>
-
-<div class="run-meta">
-${time(run.timeSec)}
-</div>
-
-<div class="run-meta pace">
-${pace(run)}/mi
-</div>
-
-<button
-class="icon"
-title="Edit run"
-onclick='openRun(${JSON.stringify(run)})'>
-✎
-</button>
-
-<button
-class="icon"
-title="Delete run"
-onclick="deleteRun('${run.id}')">
-×
-</button>
-
-</div>
-
-`)
-.join("");
-}
-
-
-/* PRs */
-
-function renderPRs(){
-
-const container=
-document.getElementById("prList");
-
-if(!data.prs.length){
-
-container.innerHTML=
-`<div class="card empty">
-No personal bests yet.
-</div>`;
-
-return;
-}
-
-container.innerHTML=
-data.prs
-.map(pr=>`
-
-<div class="card pr">
-
-<div class="pr-info">
-
-<strong>
-${escapeHTML(pr.distance)}
-</strong>
-
-<span>
-${time(pr.timeSec)}
-</span>
-
-</div>
-
-<div class="actions">
-
-<button
-class="icon"
-title="Edit PR"
-onclick='openPR(${JSON.stringify(pr)})'>
-✎
-</button>
-
-<button
-class="icon"
-title="Delete PR"
-onclick="deletePR('${pr.id}')">
-×
-</button>
-
-</div>
-
-</div>
-
-`)
-.join("");
-}
-
-
-/* FIXED JSON IMPORT */
-
-function importData(input){
-
-const file=input.files[0];
-
-if(!file){
-return;
-}
-
-const reader=new FileReader();
-
-reader.onload=function(){
-
-try{
-
-const json=JSON.parse(reader.result);
-
-let importedRuns=[];
-let importedPRs=[];
-
-
-/* Find a value using multiple possible names */
-
-function first(obj,keys,fallback=null){
-
-if(!obj||typeof obj!=="object"){
-return fallback;
-}
-
-for(const key of keys){
-
-if(
-obj[key]!==undefined &&
-obj[key]!==null
-){
-return obj[key];
-}
-
-}
-
-return fallback;
-}
-
-
-/* Normalize RUN */
-
-function normalizeRun(run){
-
-const distance=Number(
-first(
-run,
-[
-"distance",
-"miles",
-"mileage",
-"dist",
-"Distance",
-"Miles"
-],
-0
-)
-);
-
-const rawTime=first(
-run,
-[
-"timeSec",
-"timeSeconds",
-"seconds",
-"durationSeconds",
-"duration",
-"time",
-"Time"
-],
-0
-);
-
-return{
-id:first(
-run,
-["id","ID","runId"],
-id()
-),
-date:first(
-run,
-[
-"date",
-"runDate",
-"Date",
-"RunDate"
-],
-localDate()
-),
-distance:distance,
-timeSec:parseTime(rawTime),
-note:first(
-run,
-[
-"note",
-"notes",
-"Note",
-"Notes"
-],
-""
-)
-};
-
-}
-
-
-/* Normalize PR */
-
-function normalizePR(pr){
-
-const distance=String(
-first(
-pr,
-[
-"distance",
-"name",
-"label",
-"Distance",
-"Name",
-"Label"
-],
-""
-)
-).trim();
-
-const rawTime=first(
-pr,
-[
-"timeSec",
-"timeSeconds",
-"seconds",
-"durationSeconds",
-"duration",
-"time",
-"Time"
-],
-0
-);
-
-return{
-id:first(
-pr,
-["id","ID","prId"],
-id()
-),
-distance:distance,
-timeSec:parseTime(rawTime)
-};
-
-}
-
-
-/*
- * STANDARD RUN LOG FORMAT
- */
-
-if(
-json &&
-typeof json==="object" &&
-!Array.isArray(json)
-){
-
-const runLists=[
-json.runs,
-json.Runs,
-json.runLog,
-json.runLogs,
-json.history,
-json.RunsLogged
+const DEFAULT_PRS=[
+  {id:"pr-mile",label:"Mile",distance:1,timeSec:null},
+  {id:"pr-15",label:"1.5 mi",distance:1.5,timeSec:null},
+  {id:"pr-2",label:"2 mi",distance:2,timeSec:null},
+  {id:"pr-5k",label:"5K",distance:3.10686,timeSec:null}
 ];
 
-for(const list of runLists){
-
-if(Array.isArray(list)){
-
-importedRuns=
-list
-.map(normalizeRun)
-.filter(run=>
-run.distance>0 &&
-run.date
-);
-
-break;
-}
-
-}
-
-
-const prLists=[
-json.prs,
-json.PRs,
-json.personalBests,
-json.personal_best,
-json.personalRecords,
-json.personal_records,
-json.personalBests,
-json.records
-];
-
-for(const list of prLists){
-
-if(Array.isArray(list)){
-
-importedPRs=
-list
-.map(normalizePR)
-.filter(pr=>
-pr.distance &&
-pr.timeSec>0
-);
-
-break;
-}
-
-}
-
-
-/*
- * Goal
- */
-
-const goal=first(
-json,
-[
-"goal",
-"weeklyGoal",
-"weekly_goal",
-"mileageGoal"
-],
-null
-);
-
-if(
-goal!==null &&
-!isNaN(Number(goal))
-){
-
-data.goal=Number(goal);
-
-}
-
-
-/*
- * Look through nested arrays if the
- * normal property names weren't found.
- */
-
-if(
-!importedRuns.length ||
-!importedPRs.length
-){
-
-for(
-const value of Object.values(json)
-){
-
-if(!Array.isArray(value)){
-continue;
-}
-
-
-/*
- * Look for runs.
- */
-
-if(!importedRuns.length){
-
-const possibleRuns=
-value
-.map(normalizeRun)
-.filter(run=>
-run.distance>0 &&
-run.date
-);
-
-if(possibleRuns.length){
-importedRuns=possibleRuns;
-}
-
-}
-
-
-/*
- * Look for PRs.
- */
-
-if(!importedPRs.length){
-
-const possiblePRs=
-value
-.map(normalizePR)
-.filter(pr=>
-pr.distance &&
-pr.timeSec>0
-);
-
-if(possiblePRs.length){
-importedPRs=possiblePRs;
-}
-
-}
-
-}
-
-}
-
-}
-
-
-/*
- * PLAIN ARRAY FORMAT
- */
-
-if(Array.isArray(json)){
-
-for(const item of json){
-
-if(
-!item ||
-typeof item!=="object"
-){
-continue;
-}
-
-const hasDate=
-item.date!==undefined||
-item.runDate!==undefined||
-item.Date!==undefined||
-item.RunDate!==undefined;
-
-const hasDistance=
-item.distance!==undefined||
-item.miles!==undefined||
-item.mileage!==undefined||
-item.Distance!==undefined||
-item.Miles!==undefined;
-
-const hasTime=
-item.time!==undefined||
-item.timeSec!==undefined||
-item.timeSeconds!==undefined||
-item.seconds!==undefined||
-item.Time!==undefined;
-
-
-/*
- * A run has a date.
- */
-
-if(
-hasDate &&
-hasDistance
-){
-
-const run=
-normalizeRun(item);
-
-if(run.distance>0){
-importedRuns.push(run);
-}
-
-}
-
-
-/*
- * A PR has distance/time but
- * does not have a date.
- */
-
-else if(
-hasDistance &&
-hasTime
-){
-
-const pr=
-normalizePR(item);
-
-if(
-pr.distance &&
-pr.timeSec>0
-){
-
-importedPRs.push(pr);
-
-}
-
-}
-
-}
-
-}
-
-
-/*
- * Remove duplicate IDs.
- */
-
-importedRuns=
-importedRuns.filter(
-(run,index,array)=>
-index===
-array.findIndex(
-other=>other.id===run.id
-)
-);
-
-importedPRs=
-importedPRs.filter(
-(pr,index,array)=>
-index===
-array.findIndex(
-other=>other.id===pr.id
-)
-);
-
-
-/*
- * Only replace a section if that section
- * actually existed in the imported file.
- */
-
-if(importedRuns.length){
-
-data.runs=importedRuns;
-
-}
-
-if(importedPRs.length){
-
-data.prs=importedPRs;
-
-}
-
-
-/*
- * If nothing was found, report the problem.
- */
-
-if(
-!importedRuns.length &&
-!importedPRs.length
-){
-
-throw new Error(
-"No recognizable run or PR data found."
-);
-
-}
-
-
-/*
- * Sort runs newest first.
- */
-
-data.runs.sort(
-(a,b)=>b.date.localeCompare(a.date)
-);
-
-
-/*
- * Save everything.
- */
-
-localStorage.setItem(
-KEY,
-JSON.stringify(data)
-);
-
-render();
-
-
-document.getElementById("importStatus")
-.textContent=
-"Imported "+
-importedRuns.length+
-" runs and "+
-importedPRs.length+
-" PRs.";
-
-alert(
-"Import successful!\n\n"+
-"Runs imported: "+
-importedRuns.length+
-"\n"+
-"PRs imported: "+
-importedPRs.length
-);
-
-
-}catch(error){
-
-console.error(
-"JSON import error:",
-error
-);
-
-document.getElementById("importStatus")
-.textContent="Import failed.";
-
-alert(
-"Import failed.\n\n"+
-"The JSON file could not be recognized."
-);
-
-}
-
-input.value="";
-
+const DAY_MS=86400000;
+const LS_RUNS="runtracker_runs";
+const LS_PRS="runtracker_prs";
+const LS_GOAL="runtracker_goal";
+
+let state={
+  runs:loadLS(LS_RUNS,[]),
+  prs:loadLS(LS_PRS,DEFAULT_PRS),
+  goal:loadLS(LS_GOAL,20),
+  page:"home",
+  chartRange:"10w",
+  showAddRun:false,
+  showAddPr:false,
+  editingGoal:false,
+  editingPrId:null,
+  editingRunId:null,
+  addRunError:""
 };
 
-reader.onerror=function(){
-
-alert("Could not read the JSON file.");
-
-input.value="";
-
-};
-
-reader.readAsText(file);
-
+function loadLS(key,fallback){
+  try{
+    const raw=localStorage.getItem(key);
+    return raw?JSON.parse(raw):fallback;
+  }catch{
+    return fallback;
+  }
 }
 
+function saveLS(key,val){
+  try{
+    localStorage.setItem(key,JSON.stringify(val));
+  }catch(e){
+    console.error("save failed",key,e);
+  }
+}
 
-/* EXPORT */
+function parseTimeToSeconds(str){
+  if(!str)return null;
+
+  const parts=str.trim().split(":").map(p=>p.trim());
+
+  if(parts.some(p=>p===""||isNaN(Number(p))))return null;
+
+  let sec=0;
+
+  if(parts.length===3){
+    sec=(+parts[0])*3600+(+parts[1])*60+(+parts[2]);
+  }else if(parts.length===2){
+    sec=(+parts[0])*60+(+parts[1]);
+  }else if(parts.length===1){
+    sec=+parts[0];
+  }else{
+    return null;
+  }
+
+  return sec>0?Math.round(sec):null;
+}
+
+function formatSeconds(total){
+  if(total===null||total===undefined||isNaN(total))return "—";
+
+  const s=Math.round(total);
+  const h=Math.floor(s/3600);
+  const m=Math.floor((s%3600)/60);
+  const sec=s%60;
+
+  if(h>0)return `${h}:${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
+
+  return `${m}:${String(sec).padStart(2,"0")}`;
+}
+
+function formatPace(timeSec,distance){
+  if(!timeSec||!distance)return "—";
+  return `${formatSeconds(timeSec/distance)}/mi`;
+}
+
+function isoDate(d){
+  return d.toISOString().slice(0,10);
+}
+
+function todayStr(){
+  return isoDate(new Date());
+}
+
+function startOfWeek(dateStr){
+  const d=new Date(dateStr+"T00:00:00");
+  const day=d.getDay();
+  const diff=(day+6)%7;
+  d.setDate(d.getDate()-diff);
+  return isoDate(d);
+}
+
+function weekLabel(mondayStr){
+  const d=new Date(mondayStr+"T00:00:00");
+  return d.toLocaleDateString(undefined,{month:"short",day:"numeric"});
+}
+
+function computeStreak(runs){
+  if(runs.length===0)return 0;
+
+  const dateSet=new Set(runs.map(r=>r.date));
+  let cursor=new Date(todayStr()+"T00:00:00");
+
+  if(!dateSet.has(isoDate(cursor))){
+    cursor=new Date(cursor.getTime()-DAY_MS);
+    if(!dateSet.has(isoDate(cursor)))return 0;
+  }
+
+  let count=0;
+
+  while(dateSet.has(isoDate(cursor))){
+    count++;
+    cursor=new Date(cursor.getTime()-DAY_MS);
+  }
+
+  return count;
+}
+
+function esc(str){
+  return String(str??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  }[c]));
+}
+
+function setState(patch){
+  state={...state,...patch};
+  render();
+}
+
+function addRun(run){
+  state.runs=[{...run,id:"run-"+Date.now()},...state.runs];
+  saveLS(LS_RUNS,state.runs);
+  setState({
+    showAddRun:false,
+    editingRunId:null,
+    addRunError:""
+  });
+}
+
+function updateRun(id,run){
+  state.runs=state.runs.map(r=>r.id===id?{...r,...run}:r);
+  saveLS(LS_RUNS,state.runs);
+  setState({
+    showAddRun:false,
+    editingRunId:null,
+    addRunError:""
+  });
+}
+
+function deleteRun(id){
+  state.runs=state.runs.filter(r=>r.id!==id);
+  saveLS(LS_RUNS,state.runs);
+  render();
+}
+
+function addPr(pr){
+  state.prs=[...state.prs,{...pr,id:"pr-"+Date.now()}];
+  saveLS(LS_PRS,state.prs);
+  setState({showAddPr:false});
+}
+
+function updatePr(id,sec){
+  state.prs=state.prs.map(p=>p.id===id?{...p,timeSec:sec}:p);
+  saveLS(LS_PRS,state.prs);
+  setState({editingPrId:null});
+}
+
+function deletePr(id){
+  state.prs=state.prs.filter(p=>p.id!==id);
+  saveLS(LS_PRS,state.prs);
+  render();
+}
+
+function setGoal(v){
+  state.goal=v;
+  saveLS(LS_GOAL,v);
+  setState({editingGoal:false});
+}
 
 function exportData(){
+  const payload={
+    runs:state.runs,
+    prs:state.prs,
+    goal:state.goal,
+    exportedAt:new Date().toISOString()
+  };
 
-const exportObject={
-runs:data.runs,
-prs:data.prs,
-goal:data.goal
-};
+  const blob=new Blob(
+    [JSON.stringify(payload,null,2)],
+    {type:"application/json"}
+  );
 
-const blob=new Blob(
-[
-JSON.stringify(
-exportObject,
-null,
-2
-)
-],
-{
-type:"application/json"
-}
-);
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
 
-const url=
-URL.createObjectURL(blob);
+  a.href=url;
+  a.download=`run-log-${todayStr()}.json`;
+  a.click();
 
-const link=
-document.createElement("a");
-
-link.href=url;
-link.download="run-log.json";
-
-document.body.appendChild(link);
-
-link.click();
-
-link.remove();
-
-URL.revokeObjectURL(url);
+  URL.revokeObjectURL(url);
 }
 
+function importData(file){
+  if(!file)return;
 
-/* MODALS */
+  const reader=new FileReader();
 
-function closeModal(modalId){
+  reader.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
 
-document
-.getElementById(modalId)
-.classList.remove("show");
+      if(!data||typeof data!=="object"){
+        throw new Error("Invalid file");
+      }
+
+      if(Array.isArray(data.runs)){
+        state.runs=data.runs.map((r,i)=>({
+          ...r,
+          id:r.id||`run-${Date.now()}-${i}`
+        }));
+
+        saveLS(LS_RUNS,state.runs);
+      }
+
+      if(Array.isArray(data.prs)){
+        state.prs=data.prs.map((p,i)=>({
+          id:p.id||`pr-${Date.now()}-${i}`,
+          label:String(p.label??""),
+          distance:Number(p.distance)||0,
+          timeSec:
+            p.timeSec===null||
+            p.timeSec===undefined||
+            p.timeSec===""
+              ?null
+              :Number(p.timeSec)
+        })).filter(p=>p.label&&p.distance>0);
+
+        saveLS(LS_PRS,state.prs);
+      }
+
+      if(typeof data.goal==="number"){
+        state.goal=data.goal;
+        saveLS(LS_GOAL,state.goal);
+      }
+
+      render();
+    }catch{
+      alert("That file couldn't be read as a run log export.");
+    }
+  };
+
+  reader.readAsText(file);
 }
-
-
-/* INITIAL RENDER */
 
 function render(){
+  const app=document.getElementById("app");
 
-document.getElementById("today")
-.textContent=
-new Date().toLocaleDateString(
-undefined,
-{
-weekday:"long",
-month:"short",
-day:"numeric",
-year:"numeric"
+  if(state.page==="home"){
+    app.innerHTML=homeHTML();
+  }else if(state.page==="history"){
+    app.innerHTML=historyHTML();
+  }else{
+    app.innerHTML=prsHTML();
+  }
+
+  app.innerHTML+=bottomNavHTML();
+
+  if(state.showAddRun||state.editingRunId){
+    app.innerHTML+=runModalHTML();
+  }
 }
-);
 
-renderHome();
-renderHistory();
-renderPRs();
+function homeHTML(){
+  const runs=state.runs;
+  const thisWeekStart=startOfWeek(todayStr());
+
+  const thisWeekMiles=runs
+    .filter(r=>startOfWeek(r.date)===thisWeekStart)
+    .reduce((s,r)=>s+Number(r.distance||0),0);
+
+  const streak=computeStreak(runs);
+
+  const progressPct=state.goal>0
+    ?Math.min(100,(thisWeekMiles/state.goal)*100)
+    :0;
+
+  return `
+    <header class="top">
+      <div>
+        <h1>Run log</h1>
+        <p class="sub">Track distance, pace, and personal bests.</p>
+      </div>
+
+      <button class="btn btn-primary" onclick="setState({showAddRun:true})">
+        ${iconPlus()} Log a run
+      </button>
+    </header>
+
+    ${calendarHTML()}
+
+    <section class="card hero">
+      <div class="hero-top">
+        <div>
+          <div class="hero-number">
+            ${thisWeekMiles.toFixed(1)} <span class="hero-unit">mi</span>
+          </div>
+
+          <div class="hero-label">this week</div>
+        </div>
+
+        ${streak>0
+          ?`<div class="streak">
+              ${iconFlame()} ${streak} day${streak===1?"":"s"} running
+            </div>`
+          :""
+        }
+      </div>
+
+      <div class="lane">
+        <div class="lane-fill" style="width:${progressPct}%"></div>
+      </div>
+
+      <div class="lane-caption">
+        ${
+          state.editingGoal
+            ?goalEditorHTML()
+            :`<button class="link" onclick="setState({editingGoal:true})">
+                goal: ${state.goal} mi/week ${iconPencil()}
+              </button>`
+        }
+      </div>
+    </section>
+  `;
+}
+
+function calendarHTML(){
+  const now=new Date();
+  const year=now.getFullYear();
+  const month=now.getMonth();
+
+  const monthName=now.toLocaleDateString(undefined,{
+    month:"long",
+    year:"numeric"
+  });
+
+  const firstDay=new Date(year,month,1);
+  const daysInMonth=new Date(year,month+1,0).getDate();
+
+  const mondayOffset=(firstDay.getDay()+6)%7;
+  const dateSet=new Set(state.runs.map(r=>r.date));
+
+  let cells="";
+
+  for(let i=0;i<mondayOffset;i++){
+    cells+=`<div class="calendar-day empty-day"></div>`;
+  }
+
+  for(let day=1;day<=daysInMonth;day++){
+    const date=
+      `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+
+    const hasRun=dateSet.has(date);
+    const today=date===todayStr();
+
+    cells+=`
+      <div class="calendar-day ${hasRun?"has-run":""} ${today?"today":""}">
+        ${day}
+        ${
+          hasRun
+            ?`<span class="calendar-check">${iconCheck(13)}</span>`
+            :""
+        }
+      </div>
+    `;
+  }
+
+  return `
+    <section class="block">
+      <div class="calendar">
+        <div class="calendar-head">
+          <div class="calendar-title">${monthName}</div>
+        </div>
+
+        <div class="calendar-weekdays">
+          <div class="calendar-weekday">M</div>
+          <div class="calendar-weekday">T</div>
+          <div class="calendar-weekday">W</div>
+          <div class="calendar-weekday">T</div>
+          <div class="calendar-weekday">F</div>
+          <div class="calendar-weekday">S</div>
+          <div class="calendar-weekday">S</div>
+        </div>
+
+        <div class="calendar-grid">
+          ${cells}
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function historyHTML(){
+  const runs=state.runs;
+  const sortedRuns=[...runs].sort((a,b)=>a.date<b.date?1:-1);
+
+  const chart=buildChartData(state.chartRange);
+
+  return `
+    <header class="top">
+      <div>
+        <h1>History</h1>
+        <p class="sub">Mileage and logged runs.</p>
+      </div>
+
+      <button class="btn btn-primary" onclick="setState({showAddRun:true})">
+        ${iconPlus()} Log a run
+      </button>
+    </header>
+
+    <section class="block">
+      <h2>Mileage</h2>
+
+      <div class="chart-wrap">
+        <div class="chart-controls">
+          <button
+            class="chart-option ${state.chartRange==="10w"?"active":""}"
+            onclick="setState({chartRange:'10w'})">
+            10 weeks
+          </button>
+
+          <button
+            class="chart-option ${state.chartRange==="3m"?"active":""}"
+            onclick="setState({chartRange:'3m'})">
+            3 months
+          </button>
+
+          <button
+            class="chart-option ${state.chartRange==="1y"?"active":""}"
+            onclick="setState({chartRange:'1y'})">
+            1 year
+          </button>
+        </div>
+
+        <div class="chart">
+          ${chart.map(w=>`
+            <div class="chart-col">
+              <div
+                class="chart-bar"
+                style="height:${Math.max(2,(w.miles/chart.maxMiles)*100)}%"
+                title="${w.miles} mi">
+              </div>
+
+              <div class="chart-tick">${w.label}</div>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Recent runs</h2>
+
+      ${
+        sortedRuns.length===0
+          ?`<div class="empty">No runs logged yet.</div>`
+          :`
+            <div class="run-list">
+              ${sortedRuns.map(runRowHTML).join("")}
+            </div>
+          `
+      }
+    </section>
+
+    <div class="footer-row">
+      <button class="link" onclick="exportData()">
+        ${iconDownload()} export data
+      </button>
+
+      <button class="link" onclick="document.getElementById('import-input').click()">
+        ${iconUpload()} import data
+      </button>
+
+      <input
+        type="file"
+        id="import-input"
+        accept="application/json"
+        style="display:none"
+        onchange="importData(this.files[0])"
+      />
+    </div>
+  `;
+}
+
+function buildChartData(range){
+  const buckets={};
+
+  if(range==="10w"){
+    for(let i=9;i>=0;i--){
+      const d=new Date();
+      d.setDate(d.getDate()-i*7);
+
+      const wk=startOfWeek(isoDate(d));
+      buckets[wk]=buckets[wk]||0;
+    }
+
+    state.runs.forEach(r=>{
+      const wk=startOfWeek(r.date);
+
+      if(wk in buckets){
+        buckets[wk]+=Number(r.distance||0);
+      }
+    });
+
+    const weeks=Object.entries(buckets).map(([wk,miles])=>({
+      label:weekLabel(wk),
+      miles:Math.round(miles*10)/10
+    }));
+
+    return {
+      data:weeks,
+      maxMiles:Math.max(1,...weeks.map(w=>w.miles))
+    };
+  }
+
+  if(range==="3m"){
+    const now=new Date();
+
+    for(let i=2;i>=0;i--){
+      const d=new Date(now.getFullYear(),now.getMonth()-i,1);
+      const key=
+        `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
+
+      buckets[key]=0;
+    }
+
+    state.runs.forEach(r=>{
+      const key=r.date.slice(0,7);
+
+      if(key in buckets){
+        buckets[key]+=Number(r.distance||0);
+      }
+    });
+
+    const months=Object.entries(buckets).map(([key,miles])=>{
+      const d=new Date(key+"-01T00:00:00");
+
+      return {
+        label:d.toLocaleDateString(undefined,{month:"short"}),
+        miles:Math.round(miles*10)/10
+      };
+    });
+
+    return {
+      data:months,
+      maxMiles:Math.max(1,...months.map(w=>w.miles))
+    };
+  }
+
+  const now=new Date();
+
+  for(let i=11;i>=0;i--){
+    const d=new Date(now.getFullYear(),now.getMonth()-i,1);
+
+    const key=
+      `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
+
+    buckets[key]=0;
+  }
+
+  state.runs.forEach(r=>{
+    const key=r.date.slice(0,7);
+
+    if(key in buckets){
+      buckets[key]+=Number(r.distance||0);
+    }
+  });
+
+  const months=Object.entries(buckets).map(([key,miles])=>{
+    const d=new Date(key+"-01T00:00:00");
+
+    return {
+      label:d.toLocaleDateString(undefined,{month:"short"}),
+      miles:Math.round(miles*10)/10
+    };
+  });
+
+  return {
+    data:months,
+    maxMiles:Math.max(1,...months.map(w=>w.miles))
+  };
+}
+
+function prsHTML(){
+  return `
+    <header class="top">
+      <div>
+        <h1>Personal bests</h1>
+        <p class="sub">Track your fastest times.</p>
+      </div>
+    </header>
+
+    <section class="block">
+      <div class="section-head">
+        <h2>Personal bests</h2>
+
+        <button class="link" onclick="setState({showAddPr:true})">
+          ${iconPlus(13)} add distance
+        </button>
+      </div>
+
+      <div class="pr-grid">
+        ${state.prs.map(prCardHTML).join("")}
+      </div>
+
+      ${state.showAddPr?addPrFormHTML():""}
+    </section>
+
+    <div class="footer-row">
+      <button class="link" onclick="exportData()">
+        ${iconDownload()} export data
+      </button>
+
+      <button class="link" onclick="document.getElementById('pr-import-input').click()">
+        ${iconUpload()} import data
+      </button>
+
+      <input
+        type="file"
+        id="pr-import-input"
+        accept="application/json"
+        style="display:none"
+        onchange="importData(this.files[0])"
+      />
+    </div>
+  `;
+}
+
+function goalEditorHTML(){
+  return `
+    <span style="display:inline-flex;align-items:center;gap:6px;color:var(--text-dim);font-size:12.5px;">
+      goal:
+
+      <input
+        type="number"
+        min="0"
+        step="0.5"
+        id="goal-input"
+        value="${state.goal}"
+        class="text-input"
+        style="width:60px;min-height:30px;padding:4px 6px;font-size:12.5px;"
+      />
+
+      mi/week
+
+      <button
+        class="btn-icon"
+        onclick="setGoal(Number(document.getElementById('goal-input').value)||0)">
+        ${iconCheck()}
+      </button>
+
+      <button
+        class="btn-icon"
+        onclick="setState({editingGoal:false})">
+        ${iconX()}
+      </button>
+    </span>
+  `;
+}
+
+function prCardHTML(pr){
+  if(state.editingPrId===pr.id){
+    return `
+      <div class="pr-card">
+        <button
+          class="btn-icon pr-delete"
+          onclick="deletePr('${pr.id}')">
+          ${iconX(12)}
+        </button>
+
+        <div class="pr-label">${esc(pr.label)}</div>
+
+        <input
+          class="text-input"
+          id="pr-input-${pr.id}"
+          placeholder="mm:ss"
+          value="${pr.timeSec?formatSeconds(pr.timeSec):""}"
+          style="width:100%;font-size:15px;padding:6px 8px;min-height:34px;margin-bottom:6px;"
+        />
+
+        <div style="display:flex;gap:4px;">
+          <button
+            class="btn-icon"
+            onclick="
+              const v=document.getElementById('pr-input-${pr.id}').value;
+              const s=parseTimeToSeconds(v);
+              if(s)updatePr('${pr.id}',s);
+            ">
+            ${iconCheck()}
+          </button>
+
+          <button
+            class="btn-icon"
+            onclick="setState({editingPrId:null})">
+            ${iconX()}
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="pr-card">
+      <button
+        class="btn-icon pr-delete"
+        onclick="deletePr('${pr.id}')">
+        ${iconX(12)}
+      </button>
+
+      <div class="pr-label">${esc(pr.label)}</div>
+
+      <button
+        class="pr-time"
+        onclick="setState({editingPrId:'${pr.id}'})">
+        ${formatSeconds(pr.timeSec)}
+      </button>
+
+      <div class="pr-pace">
+        ${pr.timeSec?"pace "+formatPace(pr.timeSec,pr.distance):"tap to set"}
+      </div>
+    </div>
+  `;
+}
+
+function addPrFormHTML(){
+  return `
+    <div class="inline-form">
+      <input
+        class="text-input"
+        id="new-pr-label"
+        placeholder="Distance name (e.g. 10K)"
+      />
+
+      <input
+        class="text-input"
+        id="new-pr-distance"
+        type="number"
+        step="0.01"
+        placeholder="Miles"
+        style="flex:none;width:90px;"
+      />
+
+      <input
+        class="text-input"
+        id="new-pr-time"
+        placeholder="mm:ss (optional)"
+        style="flex:none;width:110px;"
+      />
+
+      <button class="btn btn-primary btn-sm" onclick="submitNewPr()">Add</button>
+
+      <button
+        class="btn btn-ghost btn-sm"
+        onclick="setState({showAddPr:false})">
+        Cancel
+      </button>
+    </div>
+  `;
+}
+
+function submitNewPr(){
+  const label=document.getElementById("new-pr-label").value.trim();
+  const distance=Number(document.getElementById("new-pr-distance").value);
+  const time=document.getElementById("new-pr-time").value;
+
+  if(!label||!distance||distance<=0)return;
+
+  addPr({
+    label,
+    distance,
+    timeSec:parseTimeToSeconds(time)
+  });
+}
+
+function runRowHTML(r){
+  const d=new Date(r.date+"T00:00:00");
+
+  const dateLabel=d.toLocaleDateString(undefined,{
+    month:"short",
+    day:"numeric"
+  });
+
+  return `
+    <div class="run-row">
+      <div class="run-date">${dateLabel}</div>
+
+      <div class="run-main">
+        <div class="run-dist">${r.distance} mi</div>
+
+        ${r.notes
+          ?`<div class="run-notes">${esc(r.notes)}</div>`
+          :""
+        }
+      </div>
+
+      <div class="run-time">${formatSeconds(r.timeSec)}</div>
+      <div class="run-pace">${formatPace(r.timeSec,r.distance)}</div>
+
+      <div class="run-actions">
+        <button
+          class="btn-icon"
+          title="Edit"
+          onclick="setState({editingRunId:'${r.id}'})">
+          ${iconPencil(14)}
+        </button>
+
+        <button
+          class="btn-icon"
+          title="Delete"
+          onclick="deleteRun('${r.id}')">
+          ${iconTrash()}
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function runModalHTML(){
+  const editing=!!state.editingRunId;
+
+  const run=editing
+    ?state.runs.find(r=>r.id===state.editingRunId)
+    :null;
+
+  if(editing&&!run){
+    state.editingRunId=null;
+    return "";
+  }
+
+  return `
+    <div
+      class="overlay"
+      onclick="
+        if(event.target===this)
+          setState({
+            showAddRun:false,
+            editingRunId:null,
+            addRunError:''
+          })
+      ">
+
+      <div class="modal">
+        <div class="modal-head">
+          <h3>${editing?"Edit run":"Log a run"}</h3>
+
+          <button
+            class="btn-icon"
+            onclick="
+              setState({
+                showAddRun:false,
+                editingRunId:null,
+                addRunError:''
+              })
+            ">
+            ${iconX()}
+          </button>
+        </div>
+
+        <label class="field">
+          <span>Date</span>
+
+          <input
+            type="date"
+            id="run-date"
+            class="text-input"
+            value="${run?esc(run.date):todayStr()}"
+          />
+        </label>
+
+        <div class="field-row">
+          <label class="field">
+            <span>Distance (mi)</span>
+
+            <input
+              type="number"
+              step="0.01"
+              id="run-distance"
+              class="text-input"
+              placeholder="3.1"
+              value="${run?esc(run.distance):""}"
+            />
+          </label>
+
+          <label class="field">
+            <span>Time</span>
+
+            <input
+              id="run-time"
+              class="text-input"
+              placeholder="mm:ss"
+              value="${run?formatSeconds(run.timeSec):""}"
+            />
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Notes (optional)</span>
+
+          <input
+            id="run-notes"
+            class="text-input"
+            placeholder="Easy shakeout, felt good"
+            value="${run?esc(run.notes||""):""}"
+          />
+        </label>
+
+        ${
+          state.addRunError
+            ?`<div class="error">${esc(state.addRunError)}</div>`
+            :""
+        }
+
+        <div class="modal-actions">
+          <button
+            class="btn btn-ghost"
+            onclick="
+              setState({
+                showAddRun:false,
+                editingRunId:null,
+                addRunError:''
+              })
+            ">
+            Cancel
+          </button>
+
+          <button
+            class="btn btn-primary"
+            onclick="${editing?"submitEditRun()":"submitNewRun()"}">
+            ${editing?"Save changes":"Save run"}
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function submitNewRun(){
+  const date=document.getElementById("run-date").value;
+  const distance=Number(document.getElementById("run-distance").value);
+  const timeStr=document.getElementById("run-time").value;
+  const notes=document.getElementById("run-notes").value.trim();
+  const sec=parseTimeToSeconds(timeStr);
+
+  if(!date)return setState({addRunError:"Add a date."});
+
+  if(!distance||distance<=0){
+    return setState({
+      addRunError:"Add a distance greater than 0."
+    });
+  }
+
+  if(!sec){
+    return setState({
+      addRunError:"Add a time as mm:ss."
+    });
+  }
+
+  addRun({
+    date,
+    distance,
+    timeSec:sec,
+    notes
+  });
+}
+
+function submitEditRun(){
+  const id=state.editingRunId;
+  const date=document.getElementById("run-date").value;
+  const distance=Number(document.getElementById("run-distance").value);
+  const timeStr=document.getElementById("run-time").value;
+  const notes=document.getElementById("run-notes").value.trim();
+  const sec=parseTimeToSeconds(timeStr);
+
+  if(!date)return setState({addRunError:"Add a date."});
+
+  if(!distance||distance<=0){
+    return setState({
+      addRunError:"Add a distance greater than 0."
+    });
+  }
+
+  if(!sec){
+    return setState({
+      addRunError:"Add a time as mm:ss."
+    });
+  }
+
+  updateRun(id,{
+    date,
+    distance,
+    timeSec:sec,
+    notes
+  });
+}
+
+function bottomNavHTML(){
+  return `
+    <nav class="bottom-nav">
+      <div class="bottom-nav-inner">
+
+        <button
+          class="nav-btn ${state.page==="home"?"active":""}"
+          onclick="setState({page:'home'})">
+          ${iconHome()}
+          <span>Home</span>
+        </button>
+
+        <button
+          class="nav-btn ${state.page==="history"?"active":""}"
+          onclick="setState({page:'history'})">
+          ${iconChart()}
+          <span>History</span>
+        </button>
+
+        <button
+          class="nav-btn ${state.page==="prs"?"active":""}"
+          onclick="setState({page:'prs'})">
+          ${iconTrophy()}
+          <span>PRs</span>
+        </button>
+
+      </div>
+    </nav>
+  `;
+}
+
+function iconPlus(size=16){
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>`;
+}
+
+function iconX(size=14){
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>`;
+}
+
+function iconCheck(size=14){
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-4-5"/></svg>`;
+}
+
+function iconPencil(size=12){
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>`;
+}
+
+function iconFlame(size=16){
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0011 17a2.5 2.5 0 002.5-2.5c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7.5 7.5 0 11-15 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5"/></svg>`;
+}
+
+function iconTrash(size=14){
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0-1 14a2 2 0 01-2 2H7a2 2 0 01-2-2L4 6"/></svg>`;
+}
+
+function iconDownload(size=13){
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>`;
+}
+
+function iconUpload(size=13){
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>`;
+}
+
+function iconHome(){
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7"/><path d="M5 9v11h14V9"/><path d="M9 20v-6h6v6"/></svg>`;
+}
+
+function iconChart(){
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5"/><path d="M4 19h17"/><path d="M8 16v-5"/><path d="M12 16V8"/><path d="M16 16v-3"/><path d="M20 16V5"/></svg>`;
+}
+
+function iconTrophy(){
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v6a5 5 0 01-10 0V4Z"/><path d="M7 6H4v2a4 4 0 004 4"/><path d="M17 6h3v2a4 4 0 01-4 4"/></svg>`;
 }
 
 render();
-
 </script>
 
 </body>
