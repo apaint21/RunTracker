@@ -2,249 +2,203 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Run Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
 :root{--bg:#0E0F0C;--surface:#17190F;--border:#2A2E1E;--text:#ECEEE4;--dim:#8C9080;--accent:#B6FF3B;--adim:rgba(182,255,59,.12)}
-*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;-webkit-tap-highlight-color:transparent}
-#app{max-width:480px;margin:auto;padding:20px 16px 86px}
-h1,h2,h3{font-family:'Space Grotesk',sans-serif;margin:0}h1{font-size:24px;font-weight:600}h2{font-size:15.5px;margin-bottom:10px}h3{font-size:16.5px}.sub,.run-date,.run-notes,.pr-label,.pr-pace,.chart-tick{color:var(--dim)}.sub{font-size:13px;margin:4px 0}
-.top,.hero-top,.section-head,.calendar-head,.modal-head{display:flex;justify-content:space-between}.top{align-items:flex-start;margin-bottom:20px;gap:10px}
-.btn,.text-input,.chart-option{font-family:inherit;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text)}.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 14px;font-size:13.5px;cursor:pointer;min-height:40px}.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--bg);font-weight:600}.btn-ghost{color:var(--dim)}.btn-sm{padding:7px 11px;font-size:12.5px;min-height:34px}
-.btn-icon,.link{background:none;border:0;color:var(--dim);cursor:pointer}.btn-icon{display:inline-flex;align-items:center;justify-content:center;padding:6px;min-width:32px;min-height:32px}.link{font:12.5px inherit;display:inline-flex;align-items:center;gap:5px;padding:0;min-height:32px}
-.card,.calendar,.chart-wrap,.pr-card{background:var(--surface);border:1px solid var(--border);border-radius:12px}.card{padding:18px 16px}.hero{margin-bottom:24px}.hero-top{align-items:flex-end;gap:8px;flex-wrap:wrap}.hero-number{font:700 40px/1 'Space Grotesk'}.hero-unit{font-size:18px;color:var(--dim)}.hero-label{color:var(--dim);font-size:12.5px;margin-top:4px}.streak{display:flex;align-items:center;gap:6px;color:var(--accent);font-size:13px}
-.lane{margin-top:16px;height:8px;border-radius:99px;background:#23261A;overflow:hidden}.lane-fill{height:100%;background:linear-gradient(90deg,var(--accent),#E8FFA0);border-radius:99px}.lane-caption{margin-top:9px;font-size:12.5px}
-.block{margin-bottom:24px}.section-head{align-items:center;margin-bottom:10px}
-.calendar{padding:16px 10px 12px}.calendar-head{align-items:center;margin-bottom:12px}.calendar-title{font:600 15px 'Space Grotesk'}.calendar-weekdays,.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.calendar-weekday{text-align:center;color:var(--dim);font-size:10px;padding-bottom:4px}.calendar-day{height:42px;min-height:42px;position:relative;display:flex;align-items:center;justify-content:center;border:1px solid transparent;border-radius:7px;font-size:12px}.calendar-day.empty-day{visibility:hidden}.calendar-day.today{border-color:var(--border)}.calendar-day.has-run{color:var(--accent);font-weight:600}.calendar-check{position:absolute;right:4px;bottom:3px;width:13px;height:13px;color:var(--accent)}
-.chart-wrap{padding:16px 10px 10px}.chart-controls{display:flex;gap:6px;margin-bottom:14px}.chart-option{flex:1;min-height:34px;font-size:12px;cursor:pointer;color:var(--dim)}.chart-option.active{background:var(--adim);border-color:var(--accent);color:var(--accent)}.chart{display:flex;align-items:flex-end;gap:6px;height:130px}.chart-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}.chart-bar{width:100%;max-width:22px;background:var(--accent);border-radius:3px 3px 0 0;min-height:2px}.chart-tick{font-size:9.5px;margin-top:6px;white-space:nowrap}
-.empty{color:var(--dim);font-size:13.5px;padding:20px;border:1px dashed var(--border);border-radius:10px;text-align:center}.run-list{display:flex;flex-direction:column;border-top:1px solid var(--border)}.run-row{display:grid;grid-template-columns:42px 1fr auto auto 64px;gap:8px;align-items:center;padding:12px 2px;border-bottom:1px solid var(--border);font-size:13px}.run-date{font-size:11.5px}.run-main{display:flex;flex-direction:column;min-width:0}.run-dist{font:600 14px 'Space Grotesk'}.run-notes{font-size:11.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:34vw}.run-time{font-size:12.5px;text-align:right}.run-pace{color:var(--accent);font-size:11px;text-align:right}.run-actions{display:flex;justify-content:flex-end}
-.pr-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.pr-card{position:relative;padding:14px 12px;border-radius:10px}.pr-label{font-size:11.5px;margin-bottom:6px}.pr-time{background:none;border:0;font:600 20px 'Space Grotesk';color:var(--text);cursor:pointer;padding:0;text-align:left;min-height:28px}.pr-pace{font-size:11px;margin-top:4px}.pr-delete{position:absolute;top:6px;right:6px;opacity:.4}
-.inline-form{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:10px}.text-input{padding:9px 10px;font-size:14px;flex:1;min-width:90px;min-height:40px}.text-input:focus{outline:none;border-color:var(--accent)}.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;font-size:12px;color:var(--dim)}.field-row{display:flex;gap:10px}.field-row .field{flex:1}
-.overlay{position:fixed;inset:0;background:rgba(4,5,3,.7);display:flex;align-items:flex-end;justify-content:center;z-index:50}.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px 16px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom));width:100%;max-width:480px}.modal-head{align-items:center;margin-bottom:16px}.modal-actions{display:flex;justify-content:flex-end;gap:8px}.error{color:var(--accent);font-size:12.5px;margin-bottom:8px}.footer-row{display:flex;justify-content:center;gap:14px;margin-top:8px}
-.bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(14,15,12,.97);border-top:1px solid var(--border)}.bottom-nav-inner{max-width:480px;margin:auto;height:64px;display:grid;grid-template-columns:repeat(3,1fr)}.nav-btn{border:0;background:none;color:var(--dim);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font:10px inherit;cursor:pointer}.nav-btn.active{color:var(--accent)}.nav-btn svg{width:19px;height:19px}svg{display:block}
-@media(max-width:380px){.run-row{grid-template-columns:38px 1fr auto 58px}.run-pace{display:none}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:"IBM Plex Sans",sans-serif}button,input{font:inherit}button{color:inherit}.app{width:100%;max-width:480px;min-height:100vh;margin:auto;padding:20px 16px 90px}
+h1,h2,h3{font-family:"Space Grotesk",sans-serif;margin:0}h1{font-size:24px}.sub{color:var(--dim);font-size:12px;margin:4px 0 0}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.btn{border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:9px 12px;cursor:pointer}.btn-primary{background:var(--accent);color:#10120C;border-color:var(--accent);font-weight:600}.btn-icon{border:0;background:none;color:var(--text);cursor:pointer;padding:5px;line-height:1}
+.block{margin-bottom:14px}.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px}.hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.hero-number{font-family:"Space Grotesk",sans-serif;font-size:34px;font-weight:700;line-height:1}.hero-unit{font-size:14px;color:var(--dim)}.hero-label{color:var(--dim);font-size:12px;margin-top:5px}.streak{color:var(--accent);font-size:12px;white-space:nowrap}
+.lane{height:7px;background:#292C20;border-radius:99px;overflow:hidden;margin-top:18px}.lane-fill{height:100%;background:var(--accent);border-radius:99px}.lane-caption{text-align:right;color:var(--dim);font-size:11px;margin-top:7px}.link{background:none;border:0;color:var(--dim);cursor:pointer;padding:0}.text-input{width:100%;background:#10110D;color:var(--text);border:1px solid var(--border);border-radius:7px;padding:8px 10px;outline:none}
+.calendar{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px}.calendar-head{display:grid;grid-template-columns:32px 1fr 32px;align-items:center;text-align:center;margin-bottom:10px}.calendar-title{font-family:"Space Grotesk",sans-serif;font-size:14px;font-weight:600}.calendar-weekdays,.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.calendar-weekday{text-align:center;color:var(--dim);font-size:10px;padding-bottom:4px}.calendar-day{height:42px;min-height:42px;position:relative;display:flex;align-items:center;justify-content:center;border:1px solid transparent;border-radius:7px;font-size:12px}.calendar-day.today{border-color:var(--border)}.calendar-day.has-run{background:var(--adim)}.calendar-check{position:absolute;right:4px;bottom:3px;width:13px;height:13px;color:var(--accent)}.empty-day{visibility:hidden}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.run-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}.run-row:last-child{border-bottom:0}.run-date{color:var(--dim);font-size:11px}.run-distance{font-family:"Space Grotesk",sans-serif;font-size:16px;font-weight:600}.run-right{display:flex;align-items:center;gap:8px}.run-time{font-family:"Space Grotesk",sans-serif;font-size:15px}.run-pace{color:var(--dim);font-size:11px}.empty{color:var(--dim);font-size:13px;padding:20px 0;text-align:center}
+.range-row{display:flex;gap:6px;margin-bottom:12px}.range-btn{flex:1;border:1px solid var(--border);background:var(--surface);color:var(--dim);border-radius:7px;padding:7px 4px;font-size:11px;cursor:pointer}.range-btn.active{color:var(--accent);border-color:var(--accent)}.chart{height:170px;display:flex;align-items:flex-end;gap:4px}.bar-wrap{flex:1;height:100%;display:flex;align-items:flex-end;justify-content:center}.bar{width:100%;max-width:18px;background:var(--accent);border-radius:3px 3px 0 0;min-height:2px}
+.pr-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.pr-card{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;min-height:112px}.pr-label{color:var(--dim);font-size:11px;margin-bottom:10px}.pr-time{display:block;background:none;border:0;padding:0;font-family:"Space Grotesk",sans-serif;font-size:22px;font-weight:600;cursor:pointer;text-align:left}.pr-pace{color:var(--dim);font-size:10px;margin-top:5px}.pr-delete{position:absolute;right:6px;top:6px;color:var(--dim)}
+.modal-back{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:flex-end;justify-content:center;padding:16px;z-index:20}.modal{width:100%;max-width:480px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px}.modal h2{margin-bottom:16px}.field{margin-bottom:12px}.field label{display:block;color:var(--dim);font-size:11px;margin-bottom:5px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}.error{color:#ff7d7d;font-size:12px;margin-top:8px}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:64px;background:rgba(23,25,15,.97);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(3,1fr);z-index:10}.nav-btn{border:0;background:none;color:var(--dim);cursor:pointer;font-size:11px}.nav-btn.active{color:var(--accent)}.nav-icon{display:block;font-size:17px;margin-bottom:2px}
 </style>
 </head>
 <body>
 <div id="app"></div>
-
 <script>
+const LS={runs:"runtracker_runs",prs:"runtracker_prs",goal:"runtracker_goal"};
 const DEFAULT_PRS=[
 {id:"pr-mile",label:"Mile",distance:1,timeSec:null},
 {id:"pr-15",label:"1.5 mi",distance:1.5,timeSec:null},
 {id:"pr-2",label:"2 mi",distance:2,timeSec:null},
 {id:"pr-5k",label:"5K",distance:3.10686,timeSec:null}
 ];
-const LS={runs:"runtracker_runs",prs:"runtracker_prs",goal:"runtracker_goal"};
-const DAY=86400000;
+
+function load(k,f){try{let x=localStorage.getItem(k);return x?JSON.parse(x):f}catch(e){return f}}
+function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
 let state={
 runs:load(LS.runs,[]),prs:load(LS.prs,DEFAULT_PRS),goal:load(LS.goal,20),
 page:"home",chartRange:"10w",calendarMonth:new Date().getMonth(),calendarYear:new Date().getFullYear(),
 showAddRun:false,showAddPr:false,editingGoal:false,editingPrId:null,editingRunId:null,error:""
 };
+function setState(x){state={...state,...x};render()}
+function esc(s){return String(s??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+function today(){return new Date().toISOString().slice(0,10)}
+function fmt(sec){sec=Math.round(Number(sec));if(!isFinite(sec))return"—";let h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;return h?`${h}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`:`${m}:${String(s).padStart(2,"0")}`}
+function time(v){v=String(v).trim();if(!v)return null;let p=v.split(":").map(Number);if(p.some(x=>!isFinite(x)))return null;if(p.length===3)return p[0]*3600+p[1]*60+p[2];if(p.length===2)return p[0]*60+p[1];return p.length===1?p[0]:null}
+function pace(sec,distance){return fmt(Number(sec)/Number(distance))+"/mi"}
+function check(n=16){return`<svg width="${n}" height="${n}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg>`}
+function plus(n=16){return`<svg width="${n}" height="${n}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>`}
+function x(n=16){return`<svg width="${n}" height="${n}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>`}
+function pencil(n=13){return`<svg width="${n}" height="${n}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg>`}
+function flame(){return"🔥"}
 
-function load(k,f){try{let v=localStorage.getItem(k);return v?JSON.parse(v):f}catch{return f}}
-function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
-function setState(p){state={...state,...p};render()}
-function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function date(d){return d.toISOString().slice(0,10)}
-function today(){return date(new Date())}
-function monthKey(y,m){return `${y}-${String(m+1).padStart(2,"0")}`}
+function monthKey(y,m){return`${y}-${String(m+1).padStart(2,"0")}`}
 function getGoal(y,m){
- let g=state.goal?.[monthKey(y,m)];
- return g==null?state.goal?.[monthKey(new Date().getFullYear(),new Date().getMonth())]??20:g
+ if(typeof state.goal==="number")return state.goal;
+ return state.goal?.[monthKey(y,m)]??state.goal?.[monthKey(new Date().getFullYear(),new Date().getMonth())]??20
 }
 function setGoal(v){
  let goals=typeof state.goal==="object"&&state.goal!==null?{...state.goal}:{[monthKey(new Date().getFullYear(),new Date().getMonth())]:Number(state.goal)||20};
- goals[monthKey(state.calendarYear,state.calendarMonth)]=v;
+ goals[monthKey(state.calendarYear,state.calendarMonth)]=Number(v)||0;
  state.goal=goals;save(LS.goal,goals);setState({editingGoal:false})
 }
-function week(s){let d=new Date(s+"T00:00:00"),n=d.getDay();d.setDate(d.getDate()-(n+6)%7);return date(d)}
-function time(s){
- if(!s)return null;
- let p=s.trim().split(":").map(Number);if(p.some(isNaN))return null;
- let x=p.length===3?p[0]*3600+p[1]*60+p[2]:p.length===2?p[0]*60+p[1]:p[0];
- return x>0?Math.round(x):null
-}
-function fmt(x){if(x==null||isNaN(x))return"—";x=Math.round(x);let h=Math.floor(x/3600),m=Math.floor(x%3600/60),s=x%60;return h?`${h}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`:`${m}:${String(s).padStart(2,"0")}`}
-function pace(t,d){return t&&d?fmt(t/d)+"/mi":"—"}
-function streak(){
- let set=new Set(state.runs.map(r=>r.date)),d=new Date(today()+"T00:00:00");
- if(!set.has(date(d))){d.setTime(d.getTime()-DAY);if(!set.has(date(d)))return 0}
- let n=0;while(set.has(date(d))){n++;d.setTime(d.getTime()-DAY)}return n
-}
+function goalEdit(goal){return`<div style="display:flex;gap:6px;justify-content:flex-end"><input class="text-input" id="goal-input" type="number" min="0" value="${goal}" style="width:80px;padding:5px 7px;min-height:30px"><button class="btn-icon" onclick="setGoal(document.getElementById('goal-input').value)">${check()}</button><button class="btn-icon" onclick="setState({editingGoal:false})">${x()}</button></div>`}
 
-function addRun(r){state.runs.unshift({...r,id:"run-"+Date.now()});save(LS.runs,state.runs);setState({showAddRun:false,error:""})}
-function updateRun(id,r){state.runs=state.runs.map(x=>x.id===id?{...x,...r}:x);save(LS.runs,state.runs);setState({editingRunId:null,error:""})}
-function deleteRun(id){state.runs=state.runs.filter(r=>r.id!==id);save(LS.runs,state.runs);render()}
-function addPr(p){state.prs.push({...p,id:"pr-"+Date.now()});save(LS.prs,state.prs);setState({showAddPr:false})}
-function updatePr(id,t){state.prs=state.prs.map(p=>p.id===id?{...p,timeSec:t}:p);save(LS.prs,state.prs);setState({editingPrId:null})}
-function deletePr(id){state.prs=state.prs.filter(p=>p.id!==id);save(LS.prs,state.prs);render()}
-
+/* PR logic */
 function actualPB(p){
- let runs=state.runs.filter(r=>Number(r.distance)===Number(p.distance)&&r.timeSec);
- return runs.length?Math.min(...runs.map(r=>Number(r.timeSec))):null
+ let runs=state.runs.filter(r=>{
+  let d=Number(r.distance),target=Number(p.distance);
+  return d>0&&target>0&&Math.abs(d-target)<=Math.max(.01,target*.005)&&Number(r.timeSec)>0;
+ });
+ return runs.length?Math.min(...runs.map(r=>Number(r.timeSec))):null;
 }
 function estimate(p){
- let best=null;
+ let best=null,target=Number(p.distance);
  state.runs.forEach(r=>{
-  let d=Number(r.distance),t=Number(r.timeSec),target=Number(p.distance);
+  let d=Number(r.distance),t=Number(r.timeSec);
   if(d>0&&t>0&&target>0){
    let predicted=t*Math.pow(target/d,1.06);
-   if(best==null||predicted<best)best=predicted
+   if(best===null||predicted<best)best=predicted;
   }
  });
- return best?Math.round(best):null
+ return best?Math.round(best):null;
 }
-function pbTime(p){
- return actualPB(p)||(!actualPB(p)?(p.timeSec||estimate(p)):null)
+function prCard(p){
+ let actual=actualPB(p);
+ let t=actual||(!actual&&p.timeSec?p.timeSec:estimate(p));
+ let est=!actual&&!p.timeSec&&!!t;
+ if(state.editingPrId===p.id)return`<div class="pr-card"><button class="btn-icon pr-delete" onclick="deletePr('${p.id}')">${x(12)}</button><div class="pr-label">${esc(p.label)}</div><input class="text-input" id="pri-${p.id}" placeholder="mm:ss" value="${p.timeSec?fmt(p.timeSec):""}" style="width:100%;font-size:15px;padding:6px 8px;min-height:34px;margin-bottom:6px"><div><button class="btn-icon" onclick="let s=time(document.getElementById('pri-${p.id}').value);if(s)updatePr('${p.id}',s)">${check()}</button><button class="btn-icon" onclick="setState({editingPrId:null})">${x()}</button></div></div>`;
+ return`<div class="pr-card"><button class="btn-icon pr-delete" onclick="deletePr('${p.id}')">${x(12)}</button><div class="pr-label">${esc(p.label)}</div><button class="pr-time" onclick="setState({editingPrId:'${p.id}'})">${t?fmt(t):"—"}${est?" Est.":""}</button><div class="pr-pace">${t?"pace "+pace(t,p.distance):"tap to set"}</div></div>`
 }
-function isEstimated(p){return !actualPB(p)&&!p.timeSec&&!!estimate(p)}
-
-function exportData(){
- let a=document.createElement("a"),u=URL.createObjectURL(new Blob([JSON.stringify({runs:state.runs,prs:state.prs,goal:state.goal,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"}));
- a.href=u;a.download=`run-log-${today()}.json`;a.click();URL.revokeObjectURL(u)
-}
-
-function importData(file){
- if(!file)return;
- let r=new FileReader();
- r.onload=e=>{
-  try{
-   let d=JSON.parse(e.target.result);if(!d||typeof d!=="object")throw 0;
-   if(Array.isArray(d.runs)){state.runs=d.runs.map((x,i)=>({...x,id:x.id||`run-${Date.now()}-${i}`}));save(LS.runs,state.runs)}
-   if(Array.isArray(d.prs)){
-    state.prs=d.prs.map((p,i)=>({id:p.id||`pr-${Date.now()}-${i}`,label:String(p.label??""),distance:Number(p.distance)||0,timeSec:p.timeSec==null||p.timeSec===""?null:Number(p.timeSec)})).filter(p=>p.label&&p.distance>0);save(LS.prs,state.prs)
-   }
-   if(typeof d.goal==="number"||typeof d.goal==="object"){state.goal=d.goal;save(LS.goal,state.goal)}
-   render()
-  }catch{alert("That file couldn't be read as a run log export.")}
- };
- r.readAsText(file)
+function updatePr(id,s){state.prs=state.prs.map(p=>p.id===id?{...p,timeSec:s}:p);save(LS.prs,state.prs);setState({editingPrId:null})}
+function deletePr(id){state.prs=state.prs.filter(p=>p.id!==id);save(LS.prs,state.prs);setState({editingPrId:null})}
+function addPr(label,distance){
+ label=String(label).trim();distance=Number(distance);
+ if(!label||!distance||distance<=0)return;
+ state.prs.push({id:"pr-"+Date.now(),label,distance,timeSec:null});
+ save(LS.prs,state.prs);setState({showAddPr:false})
 }
 
-function render(){
- let app=document.getElementById("app");
- app.innerHTML=state.page==="home"?home():state.page==="history"?history():prs();
- app.innerHTML+=nav();
- if(state.showAddRun||state.editingRunId)app.innerHTML+=runModal()
+/* Runs */
+function saveRun(){
+ let date=document.getElementById("run-date").value;
+ let distance=Number(document.getElementById("run-distance").value);
+ let timeSec=time(document.getElementById("run-time").value);
+ if(!date||!distance||distance<=0||!timeSec){setState({error:"Enter a date, distance, and time."});return}
+ if(state.editingRunId)state.runs=state.runs.map(r=>r.id===state.editingRunId?{...r,date,distance,timeSec}:r);
+ else state.runs.push({id:"run-"+Date.now(),date,distance,timeSec});
+ state.runs.sort((a,b)=>a.date.localeCompare(b.date));save(LS.runs,state.runs);
+ setState({showAddRun:false,editingRunId:null,error:""})
 }
+function deleteRun(id){state.runs=state.runs.filter(r=>r.id!==id);save(LS.runs,state.runs);setState({editingRunId:null})}
 
-function home(){
- let y=state.calendarYear,m=state.calendarMonth,key=monthKey(y,m);
- let miles=state.runs.filter(r=>r.date.startsWith(key)).reduce((s,r)=>s+Number(r.distance||0),0);
- let goal=getGoal(y,m),pct=goal?Math.min(100,miles/goal*100):0,s=streak();
- return `<header class="top"><div><h1>Run log</h1><p class="sub">Track distance, pace, and personal bests.</p></div><button class="btn btn-primary" onclick="setState({showAddRun:true})">${plus()} Log a run</button></header>
- ${calendar()}
- <section class="card hero"><div class="hero-top"><div><div class="hero-number">${miles.toFixed(1)} <span class="hero-unit">mi</span></div><div class="hero-label">this month</div></div>${s?`<div class="streak">${flame()} ${s} day${s===1?"":"s"} running</div>`:""}</div>
- <div class="lane"><div class="lane-fill" style="width:${pct}%"></div></div>
- <div class="lane-caption">${state.editingGoal?goalEdit(goal):`<button class="link" onclick="setState({editingGoal:true})">goal: ${goal} mi/month ${pencil()}</button>`}</div></section>`
+function runModal(){
+ let editing=state.editingRunId?state.runs.find(r=>r.id===state.editingRunId):null;
+ return`<div class="modal-back"><div class="modal"><h2>${editing?"Edit run":"Log a run"}</h2>
+ <div class="field"><label>Date</label><input class="text-input" id="run-date" type="date" value="${editing?editing.date:today()}"></div>
+ <div class="field"><label>Distance (mi)</label><input class="text-input" id="run-distance" type="number" step="0.01" min="0" value="${editing?editing.distance:""}"></div>
+ <div class="field"><label>Time</label><input class="text-input" id="run-time" placeholder="mm:ss" value="${editing?fmt(editing.timeSec):""}"></div>
+ ${state.error?`<div class="error">${esc(state.error)}</div>`:""}
+ <div class="modal-actions"><button class="btn" onclick="setState({showAddRun:false,editingRunId:null,error:''})">Cancel</button>
+ ${editing?`<button class="btn" onclick="deleteRun('${editing.id}')">Delete</button>`:""}
+ <button class="btn btn-primary" onclick="saveRun()">${editing?"Save":"Add run"}</button></div></div></div>`
 }
+function prModal(){return`<div class="modal-back"><div class="modal"><h2>Add personal best</h2><div class="field"><label>Name</label><input class="text-input" id="new-pr-label" placeholder="10K"></div><div class="field"><label>Distance (mi)</label><input class="text-input" id="new-pr-distance" type="number" step="0.00001" min="0" placeholder="6.21371"></div><div class="modal-actions"><button class="btn" onclick="setState({showAddPr:false})">Cancel</button><button class="btn btn-primary" onclick="addPr(document.getElementById('new-pr-label').value,document.getElementById('new-pr-distance').value)">Add</button></div></div></div>`}
 
-function changeMonth(n){
- let d=new Date(state.calendarYear,state.calendarMonth+n,1);
- setState({calendarMonth:d.getMonth(),calendarYear:d.getFullYear()})
-}
-
+function changeMonth(n){let d=new Date(state.calendarYear,state.calendarMonth+n,1);setState({calendarMonth:d.getMonth(),calendarYear:d.getFullYear()})}
 function calendar(){
  let y=state.calendarYear,m=state.calendarMonth,first=new Date(y,m,1),days=new Date(y,m+1,0).getDate(),off=(first.getDay()+6)%7,set=new Set(state.runs.map(r=>r.date)),cells="";
  for(let i=0;i<off;i++)cells+=`<div class="calendar-day empty-day"></div>`;
  for(let d=1;d<=days;d++){
-  let x=`${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`,run=set.has(x);
-  cells+=`<div class="calendar-day ${run?"has-run":""} ${x===today()?"today":""}">${d}${run?`<span class="calendar-check">${check(13)}</span>`:""}</div>`
+  let date=`${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`,run=set.has(date);
+  cells+=`<div class="calendar-day ${run?"has-run":""} ${date===today()?"today":""}">${d}${run?`<span class="calendar-check">${check(13)}</span>`:""}</div>`;
  }
  let title=new Date(y,m,1).toLocaleDateString(undefined,{month:"long",year:"numeric"});
- return `<section class="block"><div class="calendar"><div class="calendar-head"><button class="btn-icon" onclick="changeMonth(-1)">‹</button><div class="calendar-title">${title}</div><button class="btn-icon" onclick="changeMonth(1)">›</button></div><div class="calendar-weekdays">${"MTWTFSS".split("").map(x=>`<div class="calendar-weekday">${x}</div>`).join("")}</div><div class="calendar-grid">${cells}</div></div></section>`
+ return`<section class="block"><div class="calendar"><div class="calendar-head"><button class="btn-icon" onclick="changeMonth(-1)">‹</button><div class="calendar-title">${title}</div><button class="btn-icon" onclick="changeMonth(1)">›</button></div><div class="calendar-weekdays">${"MTWTFSS".split("").map(x=>`<div class="calendar-weekday">${x}</div>`).join("")}</div><div class="calendar-grid">${cells}</div></div></section>`
+}
+
+function streak(){
+ if(!state.runs.length)return 0;
+ let dates=new Set(state.runs.map(r=>r.date)),d=new Date();
+ if(!dates.has(today())){d.setDate(d.getDate()-1);if(!dates.has(d.toISOString().slice(0,10)))return 0}
+ let n=0;while(dates.has(d.toISOString().slice(0,10))){n++;d.setDate(d.getDate()-1)}return n
+}
+function home(){
+ let y=state.calendarYear,m=state.calendarMonth,key=monthKey(y,m);
+ let miles=state.runs.filter(r=>r.date.startsWith(key)).reduce((s,r)=>s+Number(r.distance||0),0),goal=getGoal(y,m),pct=goal?Math.min(100,miles/goal*100):0,s=streak();
+ return`<header class="top"><div><h1>Run log</h1><p class="sub">Track distance, pace, and personal bests.</p></div><button class="btn btn-primary" onclick="setState({showAddRun:true})">${plus()} Log a run</button></header>
+ ${calendar()}<section class="card hero"><div class="hero-top"><div><div class="hero-number">${miles.toFixed(1)} <span class="hero-unit">mi</span></div><div class="hero-label">this month</div></div>${s?`<div class="streak">${flame()} ${s} day${s===1?"":"s"} running</div>`:""}</div>
+ <div class="lane"><div class="lane-fill" style="width:${pct}%"></div></div><div class="lane-caption">${state.editingGoal?goalEdit(goal):`<button class="link" onclick="setState({editingGoal:true})">goal: ${goal} mi/month ${pencil()}</button>`}</div></section>`
 }
 
 function history(){
- let runs=[...state.runs].sort((a,b)=>b.date.localeCompare(a.date)),c=chart();
- return `<header class="top"><div><h1>History</h1><p class="sub">Mileage and logged runs.</p></div><button class="btn btn-primary" onclick="setState({showAddRun:true})">${plus()} Log a run</button></header>
- <section class="block"><h2>Mileage</h2><div class="chart-wrap"><div class="chart-controls">${["10w","3m","1y"].map((x,i)=>`<button class="chart-option ${state.chartRange===x?"active":""}" onclick="setState({chartRange:'${x}'})">${["10 weeks","3 months","1 year"][i]}</button>`).join("")}</div>
- <div class="chart">${c.data.map(x=>`<div class="chart-col"><div class="chart-bar" style="height:${Math.max(2,x.miles/c.max*100)}%" title="${x.miles} mi"></div><div class="chart-tick">${x.label}</div></div>`).join("")}</div></div></section>
- <section class="block"><h2>Recent runs</h2>${runs.length?`<div class="run-list">${runs.map(runRow).join("")}</div>`:`<div class="empty">No runs logged yet.</div>`}</section>
- <div class="footer-row"><button class="link" onclick="exportData()">${download()} export data</button><button class="link" onclick="document.getElementById('import').click()">${upload()} import data</button><input id="import" type="file" accept="application/json" hidden onchange="importData(this.files[0])"></div>`
-}
-
-function chart(){
- let b={},range=state.chartRange;
- if(range==="10w"){
-  for(let i=9;i>=0;i--){let d=new Date();d.setDate(d.getDate()-i*7);b[week(date(d))]=0}
-  state.runs.forEach(r=>{let k=week(r.date);if(k in b)b[k]+=+r.distance||0});
-  let data=Object.entries(b).map(([k,v])=>({label:new Date(k+"T00:00:00").toLocaleDateString(undefined,{month:"short",day:"numeric"}),miles:+v.toFixed(1)}));
-  return{data,max:Math.max(1,...data.map(x=>x.miles))}
+ let runs=[...state.runs].sort((a,b)=>b.date.localeCompare(a.date)),weeks=state.chartRange==="10w"?10:state.chartRange==="3m"?13:52,now=new Date(),values=[],max=0;
+ for(let i=weeks-1;i>=0;i--){
+  let end=new Date(now);end.setDate(end.getDate()-i*7);let start=new Date(end);start.setDate(start.getDate()-6);
+  let total=runs.reduce((s,r)=>{let d=new Date(r.date+"T00:00:00");return d>=start&&d<=end?s+Number(r.distance||0):s},0);
+  values.push({total,label:`${end.getMonth()+1}/${end.getDate()}`});max=Math.max(max,total)
  }
- let count=range==="3m"?3:12;
- for(let i=count-1;i>=0;i--){let d=new Date();d.setMonth(d.getMonth()-i,1),k=d.toISOString().slice(0,7);b[k]=0}
- state.runs.forEach(r=>{let k=r.date.slice(0,7);if(k in b)b[k]+=+r.distance||0});
- let data=Object.entries(b).map(([k,v])=>({label:new Date(k+"-01T00:00:00").toLocaleDateString(undefined,{month:"short"}),miles:+v.toFixed(1)}));
- return{data,max:Math.max(1,...data.map(x=>x.miles))}
+ return`<header class="top"><div><h1>History</h1><p class="sub">Your logged runs.</p></div><button class="btn btn-primary" onclick="setState({showAddRun:true})">${plus()} Log a run</button></header>
+ <section class="card"><div class="section-head"><h2>Mileage</h2></div><div class="range-row">
+ <button class="range-btn ${state.chartRange==="10w"?"active":""}" onclick="setState({chartRange:'10w'})">10 weeks</button>
+ <button class="range-btn ${state.chartRange==="3m"?"active":""}" onclick="setState({chartRange:'3m'})">3 months</button>
+ <button class="range-btn ${state.chartRange==="1y"?"active":""}" onclick="setState({chartRange:'1y'})">1 year</button></div>
+ <div class="chart">${values.map(v=>`<div class="bar-wrap"><div class="bar" style="height:${max?Math.max(2,v.total/max*100):2}%"></div></div>`).join("")}</div></section>
+ <section class="card"><div class="section-head"><h2>Runs</h2></div>${runs.length?runs.map(r=>`<div class="run-row"><div><div class="run-distance">${Number(r.distance).toFixed(2)} mi</div><div class="run-date">${new Date(r.date+"T00:00:00").toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})}</div></div><div class="run-right"><div><div class="run-time">${fmt(r.timeSec)}</div><div class="run-pace">${pace(r.timeSec,r.distance)}</div></div><button class="btn-icon" onclick="setState({editingRunId:'${r.id}'})">${pencil()}</button></div></div>`).join(""):`<div class="empty">No runs logged yet.</div>`}</section>`
 }
 
-function prs(){
- return `<header class="top"><div><h1>Personal bests</h1><p class="sub">Track your fastest times.</p></div></header>
- <section class="block"><div class="section-head"><h2>Personal bests</h2><button class="link" onclick="setState({showAddPr:true})">${plus(13)} add distance</button></div>
- <div class="pr-grid">${state.prs.map(prCard).join("")}</div>${state.showAddPr?addPrForm():""}</section>
- <div class="footer-row"><button class="link" onclick="exportData()">${download()} export data</button><button class="link" onclick="document.getElementById('pr-import').click()">${upload()} import data</button><input id="pr-import" type="file" accept="application/json" hidden onchange="importData(this.files[0])"></div>`
+function prs(){return`<header class="top"><div><h1>Personal bests</h1><p class="sub">Your fastest times and estimates.</p></div></header><section class="block"><div class="pr-grid">${state.prs.map(prCard).join("")}</div><button class="btn add-pr" style="margin-top:10px;width:100%" onclick="setState({showAddPr:true})">${plus()} Add personal best</button></section>`}
+
+function exportJSON(){
+ let blob=new Blob([JSON.stringify({runs:state.runs,prs:state.prs,goal:state.goal},null,2)],{type:"application/json"}),a=document.createElement("a");
+ a.href=URL.createObjectURL(blob);a.download="run-log.json";a.click();URL.revokeObjectURL(a.href)
+}
+function importJSON(file){
+ let reader=new FileReader();
+ reader.onload=e=>{try{
+  let d=JSON.parse(e.target.result);
+  if(Array.isArray(d.runs)){state.runs=d.runs;save(LS.runs,state.runs)}
+  if(Array.isArray(d.prs)){state.prs=d.prs.map(p=>({...p,timeSec:p.timeSec?Number(p.timeSec):null}));save(LS.prs,state.prs)}
+  if(typeof d.goal==="number"||typeof d.goal==="object"){state.goal=d.goal;save(LS.goal,state.goal)}
+  render();
+ }catch(err){alert("Invalid JSON file.")}};
+ reader.readAsText(file)
 }
 
-function goalEdit(goal){
- return `<span style="display:inline-flex;align-items:center;gap:6px;color:var(--dim);font-size:12.5px">goal:<input id="goal" type="number" min="0" step=".5" value="${goal}" class="text-input" style="width:60px;min-height:30px;padding:4px 6px;font-size:12.5px">mi/month<button class="btn-icon" onclick="setGoal(Number(document.getElementById('goal').value)||0)">${check()}</button><button class="btn-icon" onclick="setState({editingGoal:false})">${x()}</button></span>`
+document.addEventListener("click",e=>{
+ let b=e.target.closest(".nav-btn");
+ if(b)setState({page:b.dataset.page})
+});
+
+function render(){
+ let content=state.page==="home"?home():state.page==="history"?history():prs();
+ document.getElementById("app").innerHTML=`<div class="app">${content}</div>
+ <nav class="nav">
+ <button class="nav-btn ${state.page==="home"?"active":""}" data-page="home"><span class="nav-icon">⌂</span>Home</button>
+ <button class="nav-btn ${state.page==="history"?"active":""}" data-page="history"><span class="nav-icon">☰</span>History</button>
+ <button class="nav-btn ${state.page==="prs"?"active":""}" data-page="prs"><span class="nav-icon">★</span>PRs</button>
+ </nav>${state.showAddRun||state.editingRunId?runModal():""}${state.showAddPr?prModal():""}`
 }
-
-function prCard(p){
- let actual=actualPB(p),t=actual||(!actual&&p.timeSec?p.timeSec:estimate(p)),est=!actual&&!p.timeSec&&!!t;
- if(state.editingPrId===p.id)return `<div class="pr-card"><button class="btn-icon pr-delete" onclick="deletePr('${p.id}')">${x(12)}</button><div class="pr-label">${esc(p.label)}</div><input class="text-input" id="pri-${p.id}" placeholder="mm:ss" value="${p.timeSec?fmt(p.timeSec):""}" style="width:100%;font-size:15px;padding:6px 8px;min-height:34px;margin-bottom:6px"><div><button class="btn-icon" onclick="let s=time(document.getElementById('pri-${p.id}').value);if(s)updatePr('${p.id}',s)">${check()}</button><button class="btn-icon" onclick="setState({editingPrId:null})">${x()}</button></div></div>`;
- return `<div class="pr-card"><button class="btn-icon pr-delete" onclick="deletePr('${p.id}')">${x(12)}</button><div class="pr-label">${esc(p.label)}</div><button class="pr-time" onclick="setState({editingPrId:'${p.id}'})">${t?fmt(t):"—"}${est?" Est.":""}</button><div class="pr-pace">${t?"pace "+pace(t,p.distance):"tap to set"}</div></div>`
-}
-
-function addPrForm(){
- return `<div class="inline-form"><input class="text-input" id="pname" placeholder="Distance name (e.g. 10K)"><input class="text-input" id="pdist" type="number" step=".01" placeholder="Miles" style="width:90px;flex:none"><input class="text-input" id="ptime" placeholder="mm:ss (optional)" style="width:110px;flex:none"><button class="btn btn-primary btn-sm" onclick="newPr()">Add</button><button class="btn btn-ghost btn-sm" onclick="setState({showAddPr:false})">Cancel</button></div>`
-}
-function newPr(){let label=document.getElementById("pname").value.trim(),distance=+document.getElementById("pdist").value;if(label&&distance>0)addPr({label,distance,timeSec:time(document.getElementById("ptime").value)})}
-
-function runRow(r){
- let d=new Date(r.date+"T00:00:00");
- return `<div class="run-row"><div class="run-date">${d.toLocaleDateString(undefined,{month:"short",day:"numeric"})}</div><div class="run-main"><div class="run-dist">${r.distance} mi</div>${r.notes?`<div class="run-notes">${esc(r.notes)}</div>`:""}</div><div class="run-time">${fmt(r.timeSec)}</div><div class="run-pace">${pace(r.timeSec,r.distance)}</div><div class="run-actions"><button class="btn-icon" onclick="setState({editingRunId:'${r.id}'})">${pencil(14)}</button><button class="btn-icon" onclick="deleteRun('${r.id}')">${trash()}</button></div></div>`
-}
-
-function runModal(){
- let edit=!!state.editingRunId,r=edit?state.runs.find(x=>x.id===state.editingRunId):null;if(edit&&!r)return"";
- return `<div class="overlay" onclick="if(event.target===this)setState({showAddRun:false,editingRunId:null,error:''})"><div class="modal"><div class="modal-head"><h3>${edit?"Edit run":"Log a run"}</h3><button class="btn-icon" onclick="setState({showAddRun:false,editingRunId:null,error:''})">${x()}</button></div>
- <label class="field"><span>Date</span><input id="rdate" type="date" class="text-input" value="${r?esc(r.date):today()}"></label>
- <div class="field-row"><label class="field"><span>Distance (mi)</span><input id="rdist" type="number" step=".01" class="text-input" placeholder="3.1" value="${r?esc(r.distance):""}"></label><label class="field"><span>Time</span><input id="rtime" class="text-input" placeholder="mm:ss" value="${r?fmt(r.timeSec):""}"></label></div>
- <label class="field"><span>Notes (optional)</span><input id="rnotes" class="text-input" placeholder="Easy shakeout, felt good" value="${r?esc(r.notes||""):""}"></label>${state.error?`<div class="error">${esc(state.error)}</div>`:""}
- <div class="modal-actions"><button class="btn btn-ghost" onclick="setState({showAddRun:false,editingRunId:null,error:''})">Cancel</button><button class="btn btn-primary" onclick="saveRun()">${edit?"Save changes":"Save run"}</button></div></div></div>`
-}
-
-function saveRun(){
- let r={date:document.getElementById("rdate").value,distance:+document.getElementById("rdist").value,timeSec:time(document.getElementById("rtime").value),notes:document.getElementById("rnotes").value.trim()};
- if(!r.date)return setState({error:"Add a date."});if(!r.distance||r.distance<=0)return setState({error:"Add a distance greater than 0."});if(!r.timeSec)return setState({error:"Add a time as mm:ss."});
- state.editingRunId?updateRun(state.editingRunId,r):addRun(r)
-}
-
-function nav(){
- return `<nav class="bottom-nav"><div class="bottom-nav-inner">${[
- ["home","Home",homeIcon()],["history","History",chartIcon()],["prs","PRs",trophy()]
- ].map(x=>`<button class="nav-btn ${state.page===x[0]?"active":""}" data-page="${x[0]}">${x[2]}<span>${x[1]}</span></button>`).join("")}</div></nav>`
-}
-
-document.addEventListener("click",e=>{let b=e.target.closest(".nav-btn");if(b)setState({page:b.dataset.page})});
-
-function svg(path,size=14){return`<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${path}</svg>`}
-const plus=(s=16)=>svg('<path d="M12 5v14M5 12h14"/>',s);
-const x=(s=14)=>svg('<path d="M18 6L6 18M6 6l12 12"/>',s);
-const check=(s=14)=>svg('<path d="M20 6L9 17l-4-5"/>',s);
-const pencil=(s=12)=>svg('<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4Z"/>',s);
-const trash=(s=14)=>svg('<path d="M3 6h18"/><path d="M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0-1 14a2 2 0 01-2 2H7a2 2 0 01-2-2L4 6"/>',s);
-const download=(s=13)=>svg('<path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/>',s);
-const upload=(s=13)=>svg('<path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/>',s);
-const flame=(s=16)=>svg('<path d="M8.5 14.5A2.5 2.5 0 0011 17a2.5 2.5 0 002.5-2.5c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7.5 7.5 0 11-15 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5"/>',s);
-const homeIcon=()=>svg('<path d="m3 10 9-7 9 7"/><path d="M5 9v11h14V9"/><path d="M9 20v-6h6v6"/>',19);
-const chartIcon=()=>svg('<path d="M4 19V5"/><path d="M4 19h17"/><path d="M8 16v-5"/><path d="M12 16V8"/><path d="M16 16v-3"/><path d="M20 16V5"/>',19);
-const trophy=()=>svg('<path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v6a5 5 0 01-10 0V4Z"/><path d="M7 6H4v2a4 4 0 004 4"/><path d="M17 6h3v2a4 4 0 01-4 4"/>',19);
-
 render();
 </script>
 </body>
