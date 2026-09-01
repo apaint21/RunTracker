@@ -12,6 +12,7 @@
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:"IBM Plex Sans",sans-serif}button,input{font:inherit}button{color:inherit}.app{width:100%;max-width:480px;min-height:100vh;margin:auto;padding:20px 16px 90px}
 h1,h2,h3{font-family:"Space Grotesk",sans-serif;margin:0}h1{font-size:24px}.sub{color:var(--dim);font-size:12px;margin:4px 0 0}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
 .btn{border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:9px 12px;cursor:pointer}.btn-primary{background:var(--accent);color:#10120C;border-color:var(--accent);font-weight:600}.btn-icon{border:0;background:none;color:var(--text);cursor:pointer;padding:5px;line-height:1}
+.data-btn{font-size:10px;padding:6px 9px}
 .block{margin-bottom:14px}.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px}.hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.hero-number{font-family:"Space Grotesk",sans-serif;font-size:34px;font-weight:700;line-height:1}.hero-unit{font-size:14px;color:var(--dim)}.hero-label{color:var(--dim);font-size:12px;margin-top:5px}.streak{color:var(--accent);font-size:12px;white-space:nowrap}
 .lane{height:7px;background:#292C20;border-radius:99px;overflow:hidden;margin-top:18px}.lane-fill{height:100%;background:var(--accent);border-radius:99px}.lane-caption{text-align:right;color:var(--dim);font-size:11px;margin-top:7px}.link{background:none;border:0;color:var(--dim);cursor:pointer;padding:0}.text-input{width:100%;background:#10110D;color:var(--text);border:1px solid var(--border);border-radius:7px;padding:8px 10px;outline:none}
 .calendar{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px}.calendar-head{display:grid;grid-template-columns:32px 1fr 32px;align-items:center;text-align:center;margin-bottom:10px}.calendar-title{font-family:"Space Grotesk",sans-serif;font-size:14px;font-weight:600}.calendar-weekdays,.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.calendar-weekday{text-align:center;color:var(--dim);font-size:10px;padding-bottom:4px}.calendar-day{height:42px;min-height:42px;position:relative;display:flex;align-items:center;justify-content:center;border:1px solid transparent;border-radius:7px;font-size:12px}.calendar-day.today{border-color:var(--border)}.calendar-day.has-run{background:var(--adim)}.calendar-check{position:absolute;right:4px;bottom:3px;width:13px;height:13px;color:var(--accent)}.empty-day{visibility:hidden}
@@ -19,7 +20,7 @@ h1,h2,h3{font-family:"Space Grotesk",sans-serif;margin:0}h1{font-size:24px}.sub{
 .range-row{display:flex;gap:6px;margin-bottom:12px}.range-btn{flex:1;border:1px solid var(--border);background:var(--surface);color:var(--dim);border-radius:7px;padding:7px 4px;font-size:11px;cursor:pointer}.range-btn.active{color:var(--accent);border-color:var(--accent)}.chart{height:170px;display:flex;align-items:flex-end;gap:4px}.bar-wrap{flex:1;height:100%;display:flex;align-items:flex-end;justify-content:center}.bar{width:100%;max-width:18px;background:var(--accent);border-radius:3px 3px 0 0;min-height:2px}
 .pr-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.pr-card{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;min-height:112px}.pr-label{color:var(--dim);font-size:11px;margin-bottom:10px}.pr-time{display:block;background:none;border:0;padding:0;font-family:"Space Grotesk",sans-serif;font-size:22px;font-weight:600;cursor:pointer;text-align:left}.pr-pace{color:var(--dim);font-size:10px;margin-top:5px}.pr-delete{position:absolute;right:6px;top:6px;color:var(--dim)}
 .modal-back{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:flex-end;justify-content:center;padding:16px;z-index:20}.modal{width:100%;max-width:480px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px}.modal h2{margin-bottom:16px}.field{margin-bottom:12px}.field label{display:block;color:var(--dim);font-size:11px;margin-bottom:5px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}.error{color:#ff7d7d;font-size:12px;margin-top:8px}
-.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:64px;background:rgba(23,25,15,.97);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(3,1fr);z-index:10}.nav-btn{border:0;background:none;color:var(--dim);cursor:pointer;font-size:11px}.nav-btn.active{color:var(--accent)}.nav-icon{display:block;font-size:17px;margin-bottom:2px}.data-btn{font-size:10px;padding:6px 9px}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:64px;background:rgba(23,25,15,.97);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(3,1fr);z-index:10}.nav-btn{border:0;background:none;color:var(--dim);cursor:pointer;font-size:11px}.nav-btn.active{color:var(--accent)}.nav-icon{display:block;font-size:17px;margin-bottom:2px}
 </style>
 </head>
 <body>
@@ -66,8 +67,9 @@ function goalEdit(goal){return`<div style="display:flex;gap:6px;justify-content:
 
 /* PR logic */
 function actualPB(p){
+ let target=Number(p.distance);
  let runs=state.runs.filter(r=>{
-  let d=Number(r.distance),target=Number(p.distance);
+  let d=Number(r.distance);
   return d>0&&target>0&&Math.abs(d-target)<=Math.max(.01,target*.005)&&Number(r.timeSec)>0;
  });
  return runs.length?Math.min(...runs.map(r=>Number(r.timeSec))):null;
@@ -84,8 +86,13 @@ function estimate(p){
  return best?Math.round(best):null;
 }
 function prCard(p){
- let actual=actualPB(p),manual=p.timeSec&&!p.estimated?p.timeSec:null,t=actual||manual||estimate(p),est=!actual&&!manual&&!!t;
+ let actual=actualPB(p);
+ let manual=!actual&&p.timeSec&&!p.estimated?p.timeSec:null;
+ let t=actual||manual||estimate(p);
+ let est=!actual&&!manual&&!!t;
+
  if(state.editingPrId===p.id)return`<div class="pr-card"><button class="btn-icon pr-delete" onclick="deletePr('${p.id}')">${x(12)}</button><div class="pr-label">${esc(p.label)}</div><input class="text-input" id="pri-${p.id}" placeholder="mm:ss" value="${manual?fmt(manual):""}" style="width:100%;font-size:15px;padding:6px 8px;min-height:34px;margin-bottom:6px"><div><button class="btn-icon" onclick="let s=time(document.getElementById('pri-${p.id}').value);if(s)updatePr('${p.id}',s)">${check()}</button><button class="btn-icon" onclick="setState({editingPrId:null})">${x()}</button></div></div>`;
+
  return`<div class="pr-card"><button class="btn-icon pr-delete" onclick="deletePr('${p.id}')">${x(12)}</button><div class="pr-label">${esc(p.label)}</div><button class="pr-time" onclick="setState({editingPrId:'${p.id}'})">${t?fmt(t):"—"}${est?" Est.":""}</button><div class="pr-pace">${t?"pace "+pace(t,p.distance):"tap to set"}</div></div>`
 }
 function updatePr(id,s){state.prs=state.prs.map(p=>p.id===id?{...p,timeSec:s,estimated:false}:p);save(LS.prs,state.prs);setState({editingPrId:null})}
