@@ -69,7 +69,7 @@ state.goal=goals;save(LS.goal,goals);setState({editingGoal:false})
 function goalEdit(goal){return`<div style="display:flex;gap:6px;justify-content:flex-end"><input class="text-input" id="goal-input" type="number" min="0" value="${goal}" style="width:80px;padding:5px 7px;min-height:30px"><button class="btn-icon" onclick="setGoal(document.getElementById('goal-input').value)">${check()}</button><button class="btn-icon" onclick="setState({editingGoal:false})">${x()}</button></div>`}
 
 /* PR logic */
-function sameDistance(a,b){return Math.abs(Number(a)-Number(b))<=.01}
+function sameDistance(a,b){return Math.round(Math.abs(Number(a)-Number(b))*10000)/10000<=.05}
 
 function actualPB(p){
 let target=Number(p.distance),best=null;
