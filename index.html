@@ -119,7 +119,8 @@ setState({showAddPr:false})
 }
 
 function saveRun(){
-let date=document.getElementById("run-date").value,distance=Number(document.getElementById("run-distance").value),timeSec=time(document.getElementById("run-time").value),workoutType=document.getElementById("run-type").value;
+let date=document.getElementById("run-date").value,distance=Number(document.getElementById("run-distance").value),timeSec=time(document.getElementById("run-time").value),workoutType=document.getElementById("run-type").value,runSurface=document.getElementById("run-surface").value,incline=null;
+if(runSurface==="treadmill")incline=Number(document.getElementById("run-incline").value);
 let workInterval=null,recoveryInterval=null,rounds=null,intervalNotes="";
 if(workoutType==="intervals"){
   workInterval=time(document.getElementById("work-interval").value);
@@ -129,7 +130,8 @@ if(workoutType==="intervals"){
   if(!workInterval||!recoveryInterval){setState({error:"Enter both a work and recovery interval."});return}
 }
 if(!date||!distance||distance<=0||!timeSec){setState({error:"Enter a date, distance, and time."});return}
-let run={date,distance,timeSec,workoutType,workInterval,recoveryInterval,rounds,intervalNotes};
+if(runSurface==="treadmill"&&(!isFinite(incline)||incline<0)){setState({error:"Enter a valid treadmill incline."});return}
+let run={date,distance,timeSec,workoutType,runSurface,incline,workInterval,recoveryInterval,rounds,intervalNotes};
 if(state.editingRunId)state.runs=state.runs.map(r=>r.id===state.editingRunId?{...r,...run}:r);
 else state.runs.push({id:"run-"+Date.now(),...run});
 state.runs.sort((a,b)=>a.date.localeCompare(b.date));save(LS.runs,state.runs);
@@ -141,6 +143,11 @@ let isIntervals=document.getElementById("run-type").value==="intervals";
 document.getElementById("interval-fields").style.display=isIntervals?"block":"none";
 }
 
+function toggleTreadmillFields(){
+let isTreadmill=document.getElementById("run-surface").value==="treadmill";
+document.getElementById("treadmill-fields").style.display=isTreadmill?"block":"none";
+}
+
 function deleteRun(id){
 state.runs=state.runs.filter(r=>r.id!==id);
 save(LS.runs,state.runs);
@@ -150,11 +157,14 @@ setState({editingRunId:null})
 function runModal(){
 let editing=state.editingRunId?state.runs.find(r=>r.id===state.editingRunId):null;
 let isIntervals=editing?.workoutType==="intervals";
+let isTreadmill=editing?.runSurface==="treadmill";
 return`<div class="modal-back"><div class="modal"><h2>${editing?"Edit run":"Log a run"}</h2>
 <div class="field"><label>Date</label><input class="text-input" id="run-date" type="date" value="${editing?editing.date:today()}"></div>
 <div class="field"><label>Distance (mi)</label><input class="text-input" id="run-distance" type="number" step="0.01" min="0" value="${editing?editing.distance:""}"></div>
 <div class="field"><label>Time</label><input class="text-input" id="run-time" placeholder="mm:ss" value="${editing?fmt(editing.timeSec):""}"></div>
 <div class="field"><label>Run type</label><select class="text-input" id="run-type" onchange="toggleIntervalFields()"><option value="regular" ${!isIntervals?"selected":""}>Regular run</option><option value="intervals" ${isIntervals?"selected":""}>Intervals</option></select></div>
+<div class="field"><label>Location</label><select class="text-input" id="run-surface" onchange="toggleTreadmillFields()"><option value="outside" ${!isTreadmill?"selected":""}>Outside</option><option value="treadmill" ${isTreadmill?"selected":""}>Treadmill</option></select></div>
+<div id="treadmill-fields" style="display:${isTreadmill?"block":"none"}"><div class="field"><label>Incline (%)</label><input class="text-input" id="run-incline" type="number" min="0" step="0.5" placeholder="1.0" value="${editing?.incline??""}"></div></div>
 <div id="interval-fields" style="display:${isIntervals?"block":"none"}">
 <div class="field"><label>Work interval</label><input class="text-input" id="work-interval" placeholder="1:00" value="${editing?.workInterval?fmt(editing.workInterval):""}"></div>
 <div class="field"><label>Recovery interval</label><input class="text-input" id="recovery-interval" placeholder="2:00" value="${editing?.recoveryInterval?fmt(editing.recoveryInterval):""}"></div>
@@ -206,7 +216,7 @@ return`<header class="top"><div><h1>History</h1><p class="sub">Your logged runs.
 <section class="card"><div class="section-head"><h2>Mileage</h2></div><div class="range-row"><button class="range-btn ${state.chartRange==="10w"?"active":""}" onclick="setState({chartRange:'10w'})">10 weeks</button><button class="range-btn ${state.chartRange==="3m"?"active":""}" onclick="setState({chartRange:'3m'})">3 months</button><button class="range-btn ${state.chartRange==="1y"?"active":""}" onclick="setState({chartRange:'1y'})">1 year</button></div><div class="chart">${values.map(v=>`<div class="bar-wrap"><div class="bar" style="height:${max?Math.max(2,v.total/max*100):2}%"></div></div>`).join("")}</div></section>
 <section class="card"><div class="section-head"><h2>Runs</h2><div style="display:flex;gap:5px"><button class="btn data-btn" onclick="document.getElementById('import-file').click()">Import</button><button class="btn data-btn" onclick="exportJSON()">Export</button></div></div>
 <div class="range-row"><button class="range-btn ${state.historyFilter==="all"?"active":""}" onclick="setState({historyFilter:'all'})">All</button><button class="range-btn ${state.historyFilter==="regular"?"active":""}" onclick="setState({historyFilter:'regular'})">Regular</button><button class="range-btn ${state.historyFilter==="intervals"?"active":""}" onclick="setState({historyFilter:'intervals'})">Intervals</button></div>
-<input id="import-file" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(this.files[0])">${runs.length?runs.map(r=>`<div class="run-row"><div><div class="run-distance">${Number(r.distance).toFixed(2)} mi</div><div class="run-date">${new Date(r.date+"T00:00:00").toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})}</div>${r.workoutType==="intervals"?`<div class="run-pace" style="margin-top:4px">${intervalLabel(r)}</div>${r.intervalNotes?`<div class="run-date" style="margin-top:3px">${esc(r.intervalNotes)}</div>`:""}`:""}</div><div class="run-right"><div><div class="run-time">${fmt(r.timeSec)}</div><div class="run-pace">${pace(r.timeSec,r.distance)}</div></div><button class="btn-icon" onclick="setState({editingRunId:'${r.id}'})">${pencil()}</button></div></div>`).join(""):`<div class="empty">No ${state.historyFilter==="all"?"runs":state.historyFilter+" runs"} logged yet.</div>`}</section>`
+<input id="import-file" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(this.files[0])">${runs.length?runs.map(r=>`<div class="run-row"><div><div class="run-distance">${Number(r.distance).toFixed(2)} mi</div><div class="run-date">${new Date(r.date+"T00:00:00").toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})}</div><div class="run-pace" style="margin-top:4px">${r.runSurface==="treadmill"?`🏃 Treadmill${r.incline!==null&&r.incline!==undefined?` · ${Number(r.incline)}% incline`:""}`:"🌤 Outside"}</div>${r.workoutType==="intervals"?`<div class="run-pace" style="margin-top:4px">${intervalLabel(r)}</div>${r.intervalNotes?`<div class="run-date" style="margin-top:3px">${esc(r.intervalNotes)}</div>`:""}`:""}</div><div class="run-right"><div><div class="run-time">${fmt(r.timeSec)}</div><div class="run-pace">${pace(r.timeSec,r.distance)}</div></div><button class="btn-icon" onclick="setState({editingRunId:'${r.id}'})">${pencil()}</button></div></div>`).join(""):`<div class="empty">No ${state.historyFilter==="all"?"runs":state.historyFilter+" runs"} logged yet.</div>`}</section>`
 }
 
 function prs(){return`<header class="top"><div><h1>Personal bests</h1><p class="sub">Your fastest times and estimates.</p></div></header><section class="block"><div class="pr-grid">${state.prs.map(prCard).join("")}</div><button class="btn add-pr" style="margin-top:10px;width:100%" onclick="setState({showAddPr:true})">${plus()} Add personal best</button></section>`}
