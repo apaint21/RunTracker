@@ -40,7 +40,7 @@ function normalizePrs(ps){return Array.isArray(ps)?ps.map(p=>({id:p.id,label:p.l
 
 let state={
 runs:load(LS.runs,[]),prs:normalizePrs(load(LS.prs,DEFAULT_PRS)),goal:load(LS.goal,20),
-page:"home",chartRange:"10w",calendarMonth:new Date().getMonth(),calendarYear:new Date().getFullYear(),
+page:"home",chartRange:"10w",historyFilter:"all",calendarMonth:new Date().getMonth(),calendarYear:new Date().getFullYear(),
 showAddRun:false,showAddPr:false,editingGoal:false,editingRunId:null,error:""
 };
 
@@ -119,12 +119,26 @@ setState({showAddPr:false})
 }
 
 function saveRun(){
-let date=document.getElementById("run-date").value,distance=Number(document.getElementById("run-distance").value),timeSec=time(document.getElementById("run-time").value);
+let date=document.getElementById("run-date").value,distance=Number(document.getElementById("run-distance").value),timeSec=time(document.getElementById("run-time").value),workoutType=document.getElementById("run-type").value;
+let workInterval=null,recoveryInterval=null,rounds=null,intervalNotes="";
+if(workoutType==="intervals"){
+  workInterval=time(document.getElementById("work-interval").value);
+  recoveryInterval=time(document.getElementById("recovery-interval").value);
+  rounds=Number(document.getElementById("interval-rounds").value)||null;
+  intervalNotes=document.getElementById("interval-notes").value.trim();
+  if(!workInterval||!recoveryInterval){setState({error:"Enter both a work and recovery interval."});return}
+}
 if(!date||!distance||distance<=0||!timeSec){setState({error:"Enter a date, distance, and time."});return}
-if(state.editingRunId)state.runs=state.runs.map(r=>r.id===state.editingRunId?{...r,date,distance,timeSec}:r);
-else state.runs.push({id:"run-"+Date.now(),date,distance,timeSec});
+let run={date,distance,timeSec,workoutType,workInterval,recoveryInterval,rounds,intervalNotes};
+if(state.editingRunId)state.runs=state.runs.map(r=>r.id===state.editingRunId?{...r,...run}:r);
+else state.runs.push({id:"run-"+Date.now(),...run});
 state.runs.sort((a,b)=>a.date.localeCompare(b.date));save(LS.runs,state.runs);
 setState({showAddRun:false,editingRunId:null,error:""})
+}
+
+function toggleIntervalFields(){
+let isIntervals=document.getElementById("run-type").value==="intervals";
+document.getElementById("interval-fields").style.display=isIntervals?"block":"none";
 }
 
 function deleteRun(id){
@@ -135,10 +149,18 @@ setState({editingRunId:null})
 
 function runModal(){
 let editing=state.editingRunId?state.runs.find(r=>r.id===state.editingRunId):null;
+let isIntervals=editing?.workoutType==="intervals";
 return`<div class="modal-back"><div class="modal"><h2>${editing?"Edit run":"Log a run"}</h2>
 <div class="field"><label>Date</label><input class="text-input" id="run-date" type="date" value="${editing?editing.date:today()}"></div>
 <div class="field"><label>Distance (mi)</label><input class="text-input" id="run-distance" type="number" step="0.01" min="0" value="${editing?editing.distance:""}"></div>
 <div class="field"><label>Time</label><input class="text-input" id="run-time" placeholder="mm:ss" value="${editing?fmt(editing.timeSec):""}"></div>
+<div class="field"><label>Run type</label><select class="text-input" id="run-type" onchange="toggleIntervalFields()"><option value="regular" ${!isIntervals?"selected":""}>Regular run</option><option value="intervals" ${isIntervals?"selected":""}>Intervals</option></select></div>
+<div id="interval-fields" style="display:${isIntervals?"block":"none"}">
+<div class="field"><label>Work interval</label><input class="text-input" id="work-interval" placeholder="1:00" value="${editing?.workInterval?fmt(editing.workInterval):""}"></div>
+<div class="field"><label>Recovery interval</label><input class="text-input" id="recovery-interval" placeholder="2:00" value="${editing?.recoveryInterval?fmt(editing.recoveryInterval):""}"></div>
+<div class="field"><label>Rounds (optional)</label><input class="text-input" id="interval-rounds" type="number" min="1" step="1" value="${editing?.rounds||""}"></div>
+<div class="field"><label>Interval notes (optional)</label><input class="text-input" id="interval-notes" placeholder="Hard/easy, hills, track, etc." value="${esc(editing?.intervalNotes||"")}"></div>
+</div>
 ${state.error?`<div class="error">${esc(state.error)}</div>`:""}
 <div class="modal-actions"><button class="btn" onclick="setState({showAddRun:false,editingRunId:null,error:''})">Cancel</button>${editing?`<button class="btn" onclick="deleteRun('${editing.id}')">Delete</button>`:""}<button class="btn btn-primary" onclick="saveRun()">${editing?"Save":"Add run"}</button></div></div></div>`
 }
@@ -168,12 +190,23 @@ ${calendar()}<section class="card hero"><div class="hero-top"><div><div class="h
 <div class="lane"><div class="lane-fill" style="width:${pct}%"></div></div><div class="lane-caption">${state.editingGoal?goalEdit(goal):`<button class="link" onclick="setState({editingGoal:true})">goal: ${goal} mi/month ${pencil()}</button>`}</div></section>`
 }
 
+function intervalLabel(r){
+if(r.workoutType!=="intervals")return"";
+let text=`⚡ ${fmt(r.workInterval)} work / ${fmt(r.recoveryInterval)} recovery`;
+if(r.rounds)text+=` · ${r.rounds} round${Number(r.rounds)===1?"":"s"}`;
+return text
+}
+
 function history(){
-let runs=[...state.runs].sort((a,b)=>b.date.localeCompare(a.date)),weeks=state.chartRange==="10w"?10:state.chartRange==="3m"?13:52,now=new Date(),values=[],max=0;
-for(let i=weeks-1;i>=0;i--){let end=new Date(now);end.setDate(end.getDate()-i*7);let start=new Date(end);start.setDate(start.getDate()-6);let total=runs.reduce((s,r)=>{let d=new Date(r.date+"T00:00:00");return d>=start&&d<=end?s+Number(r.distance||0):s},0);values.push({total,label:`${end.getMonth()+1}/${end.getDate()}`});max=Math.max(max,total)}
+let allRuns=[...state.runs].sort((a,b)=>b.date.localeCompare(a.date));
+let runs=state.historyFilter==="all"?allRuns:allRuns.filter(r=>(r.workoutType||"regular")===state.historyFilter);
+let weeks=state.chartRange==="10w"?10:state.chartRange==="3m"?13:52,now=new Date(),values=[],max=0;
+for(let i=weeks-1;i>=0;i--){let end=new Date(now);end.setDate(end.getDate()-i*7);let start=new Date(end);start.setDate(start.getDate()-6);let total=allRuns.reduce((s,r)=>{let d=new Date(r.date+"T00:00:00");return d>=start&&d<=end?s+Number(r.distance||0):s},0);values.push({total,label:`${end.getMonth()+1}/${end.getDate()}`});max=Math.max(max,total)}
 return`<header class="top"><div><h1>History</h1><p class="sub">Your logged runs.</p></div><button class="btn btn-primary" onclick="setState({showAddRun:true})">${plus()} Log a run</button></header>
 <section class="card"><div class="section-head"><h2>Mileage</h2></div><div class="range-row"><button class="range-btn ${state.chartRange==="10w"?"active":""}" onclick="setState({chartRange:'10w'})">10 weeks</button><button class="range-btn ${state.chartRange==="3m"?"active":""}" onclick="setState({chartRange:'3m'})">3 months</button><button class="range-btn ${state.chartRange==="1y"?"active":""}" onclick="setState({chartRange:'1y'})">1 year</button></div><div class="chart">${values.map(v=>`<div class="bar-wrap"><div class="bar" style="height:${max?Math.max(2,v.total/max*100):2}%"></div></div>`).join("")}</div></section>
-<section class="card"><div class="section-head"><h2>Runs</h2><div style="display:flex;gap:5px"><button class="btn data-btn" onclick="document.getElementById('import-file').click()">Import</button><button class="btn data-btn" onclick="exportJSON()">Export</button></div></div><input id="import-file" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(this.files[0])">${runs.length?runs.map(r=>`<div class="run-row"><div><div class="run-distance">${Number(r.distance).toFixed(2)} mi</div><div class="run-date">${new Date(r.date+"T00:00:00").toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})}</div></div><div class="run-right"><div><div class="run-time">${fmt(r.timeSec)}</div><div class="run-pace">${pace(r.timeSec,r.distance)}</div></div><button class="btn-icon" onclick="setState({editingRunId:'${r.id}'})">${pencil()}</button></div></div>`).join(""):`<div class="empty">No runs logged yet.</div>`}</section>`
+<section class="card"><div class="section-head"><h2>Runs</h2><div style="display:flex;gap:5px"><button class="btn data-btn" onclick="document.getElementById('import-file').click()">Import</button><button class="btn data-btn" onclick="exportJSON()">Export</button></div></div>
+<div class="range-row"><button class="range-btn ${state.historyFilter==="all"?"active":""}" onclick="setState({historyFilter:'all'})">All</button><button class="range-btn ${state.historyFilter==="regular"?"active":""}" onclick="setState({historyFilter:'regular'})">Regular</button><button class="range-btn ${state.historyFilter==="intervals"?"active":""}" onclick="setState({historyFilter:'intervals'})">Intervals</button></div>
+<input id="import-file" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(this.files[0])">${runs.length?runs.map(r=>`<div class="run-row"><div><div class="run-distance">${Number(r.distance).toFixed(2)} mi</div><div class="run-date">${new Date(r.date+"T00:00:00").toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})}</div>${r.workoutType==="intervals"?`<div class="run-pace" style="margin-top:4px">${intervalLabel(r)}</div>${r.intervalNotes?`<div class="run-date" style="margin-top:3px">${esc(r.intervalNotes)}</div>`:""}`:""}</div><div class="run-right"><div><div class="run-time">${fmt(r.timeSec)}</div><div class="run-pace">${pace(r.timeSec,r.distance)}</div></div><button class="btn-icon" onclick="setState({editingRunId:'${r.id}'})">${pencil()}</button></div></div>`).join(""):`<div class="empty">No ${state.historyFilter==="all"?"runs":state.historyFilter+" runs"} logged yet.</div>`}</section>`
 }
 
 function prs(){return`<header class="top"><div><h1>Personal bests</h1><p class="sub">Your fastest times and estimates.</p></div></header><section class="block"><div class="pr-grid">${state.prs.map(prCard).join("")}</div><button class="btn add-pr" style="margin-top:10px;width:100%" onclick="setState({showAddPr:true})">${plus()} Add personal best</button></section>`}
